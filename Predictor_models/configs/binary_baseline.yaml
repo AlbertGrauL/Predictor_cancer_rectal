@@ -1,0 +1,56 @@
+project:
+  name: predictor_cancer_rectal
+  random_seed: 42
+
+paths:
+  dataset_root: Predictor_models/data/imagenes_cancer
+  artifacts_root: Predictor_models/artifacts
+  manifests_dir: Predictor_models/artifacts/manifests
+  reports_dir: Predictor_models/artifacts/reports
+  figures_dir: Predictor_models/artifacts/figures
+  checkpoints_dir: Predictor_models/artifacts/checkpoints
+  metrics_dir: Predictor_models/artifacts/metrics
+
+dataset:
+  mode: binary
+  image_size: 224
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  extensions:
+    - .jpg
+    - .jpeg
+    - .png
+  classes:
+    polipo:
+      - Polipos/polyps
+      - Polipos/imagenes con polipos destacados/output/original
+    no_polipo:
+      - Casos_negativos
+  external_eval_sources:
+    otras_patologias:
+      - Sangre_Paredes
+
+training:
+  batch_size: 16
+  epochs: 8
+  num_workers: 0
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  early_stopping_patience: 3
+  mixed_precision: false
+  positive_class_name: polipo
+  threshold: 0.5
+
+models:
+  baseline: efficientnet_b0
+  candidates:
+    - resnet18
+    - resnet50
+    - efficientnet_b0
+    - efficientnet_b2
+    - densenet121
+    - convnext_tiny
+
+logging:
+  experiment_name: baseline_binaria

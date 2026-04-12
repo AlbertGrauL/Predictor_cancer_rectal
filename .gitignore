@@ -12,3 +12,8 @@ wheels/
 # ── Datos ─────────────────────────────────────────────────────────────────────
 # Se ignora toda la carpeta de datos para evitar subir imágenes pesadas
 Predictor_models/data/
+Predictor_models/artifacts/checkpoints/
+Predictor_models/artifacts/figures/
+Predictor_models/artifacts/metrics/
+Predictor_models/artifacts/manifests/
+Predictor_models/artifacts/reports/
