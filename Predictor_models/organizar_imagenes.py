@@ -146,13 +146,13 @@ def main():
     missing_origs = mask_files - orig_files
 
     if missing_masks or missing_origs:
-        print("\n⚠️  ADVERTENCIA: hay desincronización!")
+        print("\nADVERTENCIA: hay desincronización!")
         if missing_masks:
             print(f"   Imágenes sin máscara: {len(missing_masks)} ficheros")
         if missing_origs:
             print(f"   Máscaras sin imagen:  {len(missing_origs)} ficheros")
     else:
-        print(f"\n  ✅ Verificación OK — todas las {len(orig_files)} imágenes")
+        print(f"\n Verificación OK — todas las {len(orig_files)} imágenes")
         print("     tienen su máscara correspondiente.")
 
 
