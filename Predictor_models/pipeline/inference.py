@@ -7,6 +7,7 @@ from typing import Any
 from .gradcam import generate_gradcam
 from .models import build_model
 from .transforms import build_transforms
+from .utils import resolve_path
 
 
 class Predictor:
@@ -19,8 +20,8 @@ class Predictor:
 
         self.torch = torch
         self.Image = Image
-        self.checkpoint_path = Path(checkpoint_path)
-        self.metadata_path = Path(metadata_path)
+        self.checkpoint_path = resolve_path(checkpoint_path)
+        self.metadata_path = resolve_path(metadata_path)
         metadata = json.loads(self.metadata_path.read_text(encoding="utf-8"))
         self.class_names = metadata["class_names"]
         self.model_name = metadata["model_name"]
@@ -35,7 +36,7 @@ class Predictor:
         self.model.eval()
 
     def predict(self, image_path: str | Path) -> dict[str, Any]:
-        image = self.Image.open(image_path).convert("RGB")
+        image = self.Image.open(resolve_path(image_path)).convert("RGB")
         tensor = self.eval_transform(image).unsqueeze(0).to(self.device)
         with self.torch.enable_grad():
             result = generate_gradcam(self.model, tensor)

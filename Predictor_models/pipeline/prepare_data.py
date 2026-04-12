@@ -8,12 +8,12 @@ from collections import defaultdict
 from pathlib import Path
 
 from .config import load_config
-from .utils import load_paths, set_seed, write_json
+from .utils import load_paths, set_seed, to_project_relative, write_json
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Genera manifiesto y splits reproducibles.")
-    parser.add_argument("--config", default="Predictor_models/configs/binary_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     return parser.parse_args()
 
 
@@ -41,7 +41,7 @@ def create_manifest(config: dict) -> list[dict[str, str | int]]:
             for file_path in discover_images(source_root, extensions):
                 rows.append(
                     {
-                        "path": str(file_path.resolve()),
+                        "path": to_project_relative(file_path),
                         "class_name": class_name,
                         "source_name": source_name,
                         "file_name": file_path.name,
@@ -130,9 +130,9 @@ def main() -> None:
     write_json(splits_path, split_map)
     write_json(summary_path, summarize(enriched))
 
-    print(f"Manifest generado en: {manifest_path}")
-    print(f"Splits generados en: {splits_path}")
-    print(f"Resumen generado en: {summary_path}")
+    print(f"Manifest generado en: {to_project_relative(manifest_path)}")
+    print(f"Splits generados en: {to_project_relative(splits_path)}")
+    print(f"Resumen generado en: {to_project_relative(summary_path)}")
 
 
 if __name__ == "__main__":

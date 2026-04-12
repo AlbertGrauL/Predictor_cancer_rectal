@@ -2,7 +2,7 @@
 
 ## 1. Introduccion
 
-Este proyecto desarrolla un sistema academico de clasificacion de imagenes endoscopicas orientado a la deteccion de polipos y a la futura extension hacia otras patologias relacionadas con el cancer colorrectal. La primera entrega se centra en un escenario binario `polipo vs no_polipo`, porque ofrece una base metodologica mas estable, reproducible y defendible para estudios.
+Este proyecto desarrolla un sistema academico de clasificacion multiclase de imagenes endoscopicas orientado a la deteccion de polipos, casos sanos y otras patologias relacionadas con el cancer colorrectal.
 
 ## 2. Problema y motivacion
 
@@ -16,19 +16,18 @@ Los polipos colorrectales pueden representar lesiones precursoras del cancer col
 
 ## 3. Alcance de la v1
 
-La v1 implementa:
+La version actual implementa:
 
 - auditoria automatizada del dataset
-- pipeline reproducible para entrenamiento binario
+- pipeline reproducible para entrenamiento multiclase
 - comparacion de CNNs modernas
 - evaluacion completa con metricas y graficas
 - Grad-CAM para interpretacion visual
 - app de demostracion con Streamlit
 
-Queda fuera de la v1:
+Queda fuera de esta version:
 
 - validacion clinica formal
-- entrenamiento multiclase definitivo
 - integracion hospitalaria
 - certificacion o uso asistencial
 
@@ -39,7 +38,7 @@ Queda fuera de la v1:
 - `Casos_negativos/*`
 - `Polipos/polyps`
 - `Polipos/imagenes con polipos destacados/output/original`
-- `Sangre_Paredes/*` solo para evaluacion externa exploratoria
+- `Sangre_Paredes/*`
 
 ### 4.2 Riesgos del dataset
 
@@ -50,11 +49,11 @@ Queda fuera de la v1:
 
 ### 4.3 Decision metodologica
 
-Para la fase inicial:
+Para la configuracion actual:
 
-- entrenar solo con `polipo` y `no_polipo`
-- reservar `Sangre_Paredes` para analizar falsas activaciones sobre patologias no objetivo
-- dejar preparada la configuracion para futuro escenario multiclase
+- entrenar con tres clases: `polipo`, `sano` y `otras_patologias`
+- mantener un split reproducible y estratificado
+- comparar varias CNN sobre la misma definicion multiclase
 
 ## 5. Metodologia de modelado
 
@@ -78,7 +77,7 @@ Para la fase inicial:
 No se selecciona por accuracy aislada. El criterio principal es:
 
 - recall de `polipo`
-- F1-score
+- F1 macro
 - ROC-AUC
 - PR-AUC
 - estabilidad entre corridas
@@ -95,7 +94,7 @@ No se selecciona por accuracy aislada. El criterio principal es:
 - ROC-AUC
 - PR-AUC
 - matriz de confusion
-- curva de calibracion basica
+- metricas por clase
 
 ### 6.2 Evaluacion cualitativa
 
@@ -103,10 +102,6 @@ No se selecciona por accuracy aislada. El criterio principal es:
 - revision de falsos negativos
 - analisis por fuente del dataset
 - estudio visual de mapas Grad-CAM
-
-### 6.3 Evaluacion externa exploratoria
-
-El conjunto `Sangre_Paredes` se usa para estimar si el modelo binario confunde otras patologias con polipos. Este analisis ayuda a justificar una futura ampliacion multiclase.
 
 ## 7. Interpretabilidad
 
@@ -117,11 +112,11 @@ Se utiliza `Grad-CAM` para mostrar que regiones de la imagen influyen mas en la 
 La aplicacion incluye:
 
 - carga de imagen
-- prediccion binaria
+- prediccion multiclase
 - probabilidad estimada
 - visualizacion Grad-CAM
 - breve explicacion en lenguaje natural
-- panel de metricas del mejor modelo
+- panel de metricas y comparacion entre modelos multiclase
 
 ## 9. Limitaciones
 
@@ -132,7 +127,6 @@ La aplicacion incluye:
 
 ## 10. Trabajo futuro
 
-- clasificacion multiclase `polipo / no_polipo / otras_patologias`
 - incorporar validacion cruzada mas amplia
 - evaluar arquitecturas adicionales
 - integrar segmentacion y clasificacion conjunta

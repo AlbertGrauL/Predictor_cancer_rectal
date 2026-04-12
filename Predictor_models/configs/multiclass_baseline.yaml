@@ -1,5 +1,5 @@
 project:
-  name: predictor_cancer_rectal
+  name: predictor_cancer_rectal_multiclase
   random_seed: 42
 
 paths:
@@ -12,7 +12,7 @@ paths:
   metrics_dir: Predictor_models/artifacts/metrics
 
 dataset:
-  mode: binary
+  mode: multiclass
   image_size: 224
   train_ratio: 0.7
   val_ratio: 0.15
@@ -25,22 +25,22 @@ dataset:
     polipo:
       - Polipos/polyps
       - Polipos/imagenes con polipos destacados/output/original
-    no_polipo:
+    sano:
       - Casos_negativos
-  external_eval_sources:
     otras_patologias:
       - Sangre_Paredes
+  external_eval_sources: {}
 
 training:
   batch_size: 16
-  epochs: 8
+  epochs: 10
   num_workers: 0
   learning_rate: 0.0003
   weight_decay: 0.0001
   early_stopping_patience: 3
   mixed_precision: false
   positive_class_name: polipo
-  threshold: 0.5
+  primary_metric: f1_macro
 
 models:
   baseline: efficientnet_b0
@@ -53,4 +53,4 @@ models:
     - convnext_tiny
 
 logging:
-  experiment_name: baseline_binaria
+  experiment_name: baseline_multiclase

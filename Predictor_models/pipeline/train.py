@@ -9,12 +9,12 @@ from .config import load_config
 from .dataset import ImageClassificationDataset, collate_with_rows, load_manifest
 from .models import build_model, freeze_backbone, unfreeze_all
 from .transforms import build_transforms
-from .utils import dependency_guard, load_paths, set_seed
+from .utils import dependency_guard, load_paths, resolve_path, set_seed, to_project_relative
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Entrena un modelo CNN para clasificacion binaria.")
-    parser.add_argument("--config", default="Predictor_models/configs/binary_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     parser.add_argument("--model", default=None, help="Nombre del modelo a entrenar.")
     parser.add_argument("--manifest", default="Predictor_models/artifacts/manifests/dataset_manifest.csv")
     parser.add_argument("--epochs", type=int, default=None, help="Sobrescribe el numero de epocas.")
@@ -38,19 +38,18 @@ def evaluate_loader(model, loader, device, threshold: float, positive_index: int
     criterion = torch.nn.CrossEntropyLoss()
     y_true: list[int] = []
     y_pred: list[int] = []
-    y_score: list[float] = []
+    y_score: list[list[float]] = []
     with torch.no_grad():
         for images, labels, _rows in loader:
             images = images.to(device)
             labels = labels.to(device)
             logits = model(images)
             loss = criterion(logits, labels)
-            probabilities = torch.softmax(logits, dim=1)[:, positive_index]
-            predictions = (probabilities >= threshold).long()
-            binary_labels = (labels == positive_index).long()
+            probabilities = torch.softmax(logits, dim=1)
+            predictions = probabilities.argmax(dim=1)
 
             total_loss += float(loss.item()) * images.size(0)
-            y_true.extend(binary_labels.cpu().tolist())
+            y_true.extend(labels.cpu().tolist())
             y_pred.extend(predictions.cpu().tolist())
             y_score.extend(probabilities.cpu().tolist())
     return total_loss / max(len(loader.dataset), 1), y_true, y_pred, y_score
@@ -78,7 +77,7 @@ def main() -> None:
     paths = load_paths(config)
 
     model_name = args.model or config["models"]["baseline"]
-    manifest_path = Path(args.manifest)
+    manifest_path = resolve_path(args.manifest)
     class_names = list(config["dataset"]["classes"].keys())
     class_to_idx = {name: index for index, name in enumerate(class_names)}
     positive_index = class_to_idx[config["training"]["positive_class_name"]]
@@ -125,7 +124,7 @@ def main() -> None:
     best_f1 = -1.0
     best_path = paths.checkpoints_dir / f"{model_name}_best.pt"
     patience = 0
-    threshold = config["training"]["threshold"]
+    threshold = config["training"].get("threshold", 0.5)
 
     total_epochs = args.epochs or config["training"]["epochs"]
     for epoch in range(1, total_epochs + 1):
@@ -151,24 +150,28 @@ def main() -> None:
 
         train_loss = running_loss / max(len(train_loader.dataset), 1)
         val_loss, y_true, y_pred, y_score = evaluate_loader(model, val_loader, device, threshold, positive_index)
-        metrics = compute_classification_metrics(y_true, y_pred, y_score)
+        metrics = compute_classification_metrics(y_true, y_pred, y_score, class_names, positive_index)
 
         epoch_record = {
             "epoch": epoch,
             "train_loss": train_loss,
             "val_loss": val_loss,
             "accuracy": metrics["accuracy"],
-            "precision": metrics["precision"],
-            "recall": metrics["recall"],
-            "f1": metrics["f1"],
+            "precision_macro": metrics["precision_macro"],
+            "recall_macro": metrics["recall_macro"],
+            "f1_macro": metrics["f1_macro"],
+            "f1_weighted": metrics["f1_weighted"],
             "roc_auc": metrics["roc_auc"],
             "pr_auc": metrics["pr_auc"],
         }
         history.append(epoch_record)
         print(json.dumps(epoch_record, ensure_ascii=False))
 
-        if metrics["f1"] > best_f1:
-            best_f1 = metrics["f1"]
+        score_metric_name = config["training"].get("primary_metric", "macro_f1")
+        score_metric_value = metrics.get(score_metric_name) or metrics.get("f1_macro") or metrics.get("f1")
+
+        if score_metric_value > best_f1:
+            best_f1 = score_metric_value
             patience = 0
             torch.save(
                 {
@@ -176,6 +179,7 @@ def main() -> None:
                     "model_name": model_name,
                     "class_names": class_names,
                     "config": config,
+                    "primary_metric": score_metric_name,
                 },
                 best_path,
             )
@@ -191,7 +195,7 @@ def main() -> None:
             {
                 "model_name": model_name,
                 "class_names": class_names,
-                "checkpoint_path": str(best_path),
+                "checkpoint_path": to_project_relative(best_path),
             },
             indent=2,
             ensure_ascii=False,
@@ -200,9 +204,9 @@ def main() -> None:
     )
     history_path.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(f"Checkpoint guardado en: {best_path}")
-    print(f"Historial guardado en: {history_path}")
-    print(f"Metadatos guardados en: {metadata_path}")
+    print(f"Checkpoint guardado en: {to_project_relative(best_path)}")
+    print(f"Historial guardado en: {to_project_relative(history_path)}")
+    print(f"Metadatos guardados en: {to_project_relative(metadata_path)}")
 
 
 if __name__ == "__main__":

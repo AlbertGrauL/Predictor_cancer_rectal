@@ -20,6 +20,14 @@ def resolve_path(value: str | Path) -> Path:
     return path if path.is_absolute() else ROOT / path
 
 
+def to_project_relative(value: str | Path) -> str:
+    resolved = resolve_path(value)
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(resolved)
+
+
 def ensure_dir(path: str | Path) -> Path:
     resolved = resolve_path(path)
     resolved.mkdir(parents=True, exist_ok=True)

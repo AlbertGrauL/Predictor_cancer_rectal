@@ -1,6 +1,6 @@
-# Predictor de Polipos y Patologias Relacionadas con Cancer Rectal
+# Predictor Multiclase de Polipos y Patologias Relacionadas con Cancer Rectal
 
-Proyecto academico para clasificacion de imagenes endoscopicas centrado en una primera fase binaria `polipo vs no_polipo`, con una arquitectura preparada para extenderse a un escenario multiclase con otras patologias gastrointestinales.
+Proyecto academico para clasificacion multiclase de imagenes endoscopicas orientado a la prediccion `polipo / sano / otras_patologias`.
 
 ## Objetivos
 
@@ -12,12 +12,15 @@ Proyecto academico para clasificacion de imagenes endoscopicas centrado en una p
 
 ## Estado del proyecto
 
-La v1 esta orientada a un clasificador binario:
+La configuracion activa por defecto esta orientada a un clasificador multiclase:
 
 - `polipo`: `Predictor_models/data/imagenes_cancer/Polipos/polyps` + dataset consolidado `output/original`
-- `no_polipo`: `Predictor_models/data/imagenes_cancer/Casos_negativos/*`
+- `sano`: `Predictor_models/data/imagenes_cancer/Casos_negativos/*`
+- `otras_patologias`: `Predictor_models/data/imagenes_cancer/Sangre_Paredes/*`
 
-La carpeta `Sangre_Paredes` se reserva para evaluacion externa exploratoria y para una futura fase multiclase.
+Configuracion disponible:
+
+- [multiclass_baseline.yaml](Predictor_models/configs/multiclass_baseline.yaml) como configuracion principal del proyecto
 
 ## Estructura
 
@@ -61,8 +64,8 @@ uv sync
 
 Si quieres ejecutarlo sin escribir toda la secuencia a mano, en la raiz del proyecto tienes:
 
-- [ejecutar_pipeline_inicial.bat](/C:/Users/victo/Desktop/Predictor_cancer_rectal/ejecutar_pipeline_inicial.bat)
-- [ejecutar_comparacion_modelos.bat](/C:/Users/victo/Desktop/Predictor_cancer_rectal/ejecutar_comparacion_modelos.bat)
+- [ejecutar_pipeline_inicial.bat](ejecutar_pipeline_inicial.bat)
+- [ejecutar_comparacion_modelos.bat](ejecutar_comparacion_modelos.bat)
 
 El primero ejecuta:
 
@@ -88,7 +91,7 @@ Tambien puedes lanzarlos desde terminal:
 ### 1. Auditar el dataset
 
 ```bash
-uv run python -m Predictor_models.pipeline.audit_dataset --config Predictor_models/configs/binary_baseline.yaml
+uv run python -m Predictor_models.pipeline.audit_dataset --config Predictor_models/configs/multiclass_baseline.yaml
 ```
 
 Genera:
@@ -102,7 +105,7 @@ Genera:
 ### 2. Crear splits reproducibles
 
 ```bash
-uv run python -m Predictor_models.pipeline.prepare_data --config Predictor_models/configs/binary_baseline.yaml
+uv run python -m Predictor_models.pipeline.prepare_data --config Predictor_models/configs/multiclass_baseline.yaml
 ```
 
 Genera:
@@ -116,7 +119,7 @@ Genera:
 Ejemplo con EfficientNet-B0:
 
 ```bash
-uv run python -m Predictor_models.pipeline.train --config Predictor_models/configs/binary_baseline.yaml --model efficientnet_b0
+uv run python -m Predictor_models.pipeline.train --config Predictor_models/configs/multiclass_baseline.yaml --model efficientnet_b0
 ```
 
 Modelos preparados:
@@ -131,7 +134,7 @@ Modelos preparados:
 ### 4. Evaluar un checkpoint
 
 ```bash
-uv run python -m Predictor_models.pipeline.evaluate --config Predictor_models/configs/binary_baseline.yaml --checkpoint Predictor_models/artifacts/checkpoints/efficientnet_b0_best.pt
+uv run python -m Predictor_models.pipeline.evaluate --config Predictor_models/configs/multiclass_baseline.yaml --checkpoint Predictor_models/artifacts/checkpoints/efficientnet_b0_best.pt
 ```
 
 Genera:
@@ -141,7 +144,8 @@ Genera:
 - curvas ROC y PR
 - calibracion
 - analisis por fuente
-- evaluacion externa exploratoria sobre `Sangre_Paredes`
+- metricas por clase
+- comparativa multiclase
 
 ### 5. Lanzar la app de Streamlit
 
@@ -153,8 +157,8 @@ uv run streamlit run Predictor_front/app.py
 
 Si prefieres ejecutarlo sin los `.bat`, tambien tienes dos orquestadores:
 
-- [run_initial_pipeline.py](/C:/Users/victo/Desktop/Predictor_cancer_rectal/Predictor_models/pipeline/run_initial_pipeline.py)
-- [run_model_comparison.py](/C:/Users/victo/Desktop/Predictor_cancer_rectal/Predictor_models/pipeline/run_model_comparison.py)
+- [run_initial_pipeline.py](Predictor_models/pipeline/run_initial_pipeline.py)
+- [run_model_comparison.py](Predictor_models/pipeline/run_model_comparison.py)
 
 Ejemplos:
 
@@ -168,15 +172,16 @@ uv run python -m Predictor_models.pipeline.run_model_comparison --models resnet5
 ## Metricas principales
 
 - Accuracy
-- Precision
-- Recall
-- F1-score
+- Precision macro
+- Recall macro
+- F1 macro
+- F1 weighted
 - ROC-AUC
 - PR-AUC
 - Matriz de confusion
-- Calibracion basica
+- Metricas por clase
 
-La seleccion del mejor modelo no debe hacerse solo por accuracy. En este proyecto se prioriza especialmente el `recall` y `F1` de la clase `polipo`.
+La seleccion del mejor modelo no debe hacerse solo por accuracy. En esta version multiclase se priorizan especialmente `F1 macro`, `Recall macro` y el comportamiento por clase.
 
 ## Interpretabilidad
 
@@ -188,7 +193,7 @@ La app y el pipeline soportan:
 
 ## Documentacion academica
 
-La memoria tecnica completa esta en [docs/memoria_tecnica.md](/C:/Users/victo/Desktop/Predictor_cancer_rectal/docs/memoria_tecnica.md).
+La memoria tecnica completa esta en [docs/memoria_tecnica.md](docs/memoria_tecnica.md).
 
 ## Limitaciones y aviso
 

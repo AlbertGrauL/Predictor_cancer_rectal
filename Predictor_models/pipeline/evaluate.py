@@ -10,12 +10,12 @@ from .dataset import ImageClassificationDataset, collate_with_rows, load_manifes
 from .metrics import compute_classification_metrics, save_curves
 from .models import build_model
 from .transforms import build_transforms
-from .utils import dependency_guard, load_paths
+from .utils import dependency_guard, load_paths, resolve_path, to_project_relative
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evalua un checkpoint entrenado.")
-    parser.add_argument("--config", default="Predictor_models/configs/binary_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--manifest", default="Predictor_models/artifacts/manifests/dataset_manifest.csv")
     parser.add_argument("--max-samples", type=int, default=None, help="Limita muestras de test para smoke tests.")
@@ -36,18 +36,17 @@ def evaluate_loader(model, loader, device, threshold: float, positive_index: int
     model.eval()
     y_true: list[int] = []
     y_pred: list[int] = []
-    y_score: list[float] = []
+    y_score: list[list[float]] = []
     details: list[dict[str, str | float | int]] = []
     with torch.no_grad():
         for images, labels, rows in loader:
             images = images.to(device)
             labels = labels.to(device)
             logits = model(images)
-            probabilities = torch.softmax(logits, dim=1)[:, positive_index]
-            predictions = (probabilities >= threshold).long()
-            binary_labels = (labels == positive_index).long()
+            probabilities = torch.softmax(logits, dim=1)
+            predictions = probabilities.argmax(dim=1)
 
-            label_list = binary_labels.cpu().tolist()
+            label_list = labels.cpu().tolist()
             pred_list = predictions.cpu().tolist()
             score_list = probabilities.cpu().tolist()
             y_true.extend(label_list)
@@ -61,7 +60,8 @@ def evaluate_loader(model, loader, device, threshold: float, positive_index: int
                         "class_name": row["class_name"],
                         "y_true": truth,
                         "y_pred": pred,
-                        "score_polipo": score,
+                        "score_polipo": score[positive_index] if positive_index < len(score) else None,
+                        "probabilities": score,
                     }
                 )
     return y_true, y_pred, y_score, details
@@ -76,6 +76,9 @@ def external_eval(config: dict, class_to_idx: dict[str, int], model, device, thr
     extensions = {ext.lower() for ext in dataset_cfg["extensions"]}
     _, eval_transform = build_transforms(dataset_cfg["image_size"])
 
+    if not dataset_cfg.get("external_eval_sources"):
+        return {}
+
     summary: dict[str, dict[str, float | int]] = {}
     for group_name, relative_paths in dataset_cfg.get("external_eval_sources", {}).items():
         rows = []
@@ -84,7 +87,7 @@ def external_eval(config: dict, class_to_idx: dict[str, int], model, device, thr
                 if file_path.is_file() and file_path.suffix.lower() in extensions:
                     rows.append(
                         {
-                            "path": str(file_path.resolve()),
+                            "path": to_project_relative(file_path),
                             "class_name": next(iter(class_to_idx.keys())),
                             "source_name": relative_path,
                             "file_name": file_path.name,
@@ -141,7 +144,7 @@ def main() -> None:
     class_to_idx = {name: index for index, name in enumerate(class_names)}
     positive_index = class_to_idx[config["training"]["positive_class_name"]]
 
-    checkpoint = torch.load(args.checkpoint, map_location="cpu")
+    checkpoint = torch.load(resolve_path(args.checkpoint), map_location="cpu")
     model_name = checkpoint["model_name"]
     model = build_model(model_name, num_classes=len(class_names), pretrained=False)
     model.load_state_dict(checkpoint["model_state_dict"])
@@ -164,11 +167,11 @@ def main() -> None:
         model,
         test_loader,
         device=device,
-        threshold=config["training"]["threshold"],
+        threshold=config["training"].get("threshold", 0.5),
         positive_index=positive_index,
     )
-    metrics = compute_classification_metrics(y_true, y_pred, y_score)
-    curve_paths = save_curves(y_true, y_score, paths.figures_dir, prefix=model_name)
+    metrics = compute_classification_metrics(y_true, y_pred, y_score, class_names, positive_index)
+    curve_paths = save_curves(y_true, y_score, paths.figures_dir, prefix=model_name, class_names=class_names)
 
     by_source: dict[str, dict[str, int]] = defaultdict(lambda: {"total": 0, "errors": 0})
     for item in details:
@@ -179,7 +182,8 @@ def main() -> None:
 
     report = {
         "model_name": model_name,
-        "checkpoint": args.checkpoint,
+        "checkpoint": to_project_relative(args.checkpoint),
+        "class_names": class_names,
         "metrics": metrics,
         "curve_paths": curve_paths,
         "by_source": dict(by_source),
@@ -189,7 +193,7 @@ def main() -> None:
             class_to_idx,
             model,
             device,
-            config["training"]["threshold"],
+            config["training"].get("threshold", 0.5),
             positive_index,
         ),
     }
@@ -197,7 +201,7 @@ def main() -> None:
     report_path = paths.metrics_dir / f"{model_name}_evaluation.json"
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report, indent=2, ensure_ascii=False))
-    print(f"\nReporte guardado en: {report_path}")
+    print(f"\nReporte guardado en: {to_project_relative(report_path)}")
 
 
 if __name__ == "__main__":

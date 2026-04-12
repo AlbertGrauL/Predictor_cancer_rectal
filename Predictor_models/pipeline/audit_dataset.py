@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Iterable
 
 from .config import load_config
-from .utils import load_paths, set_seed, write_json
+from .utils import load_paths, set_seed, to_project_relative, write_json
 
 
 @dataclass(slots=True)
@@ -27,7 +27,7 @@ class ImageInfo:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audita el dataset del proyecto.")
-    parser.add_argument("--config", default="Predictor_models/configs/binary_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     return parser.parse_args()
 
 
@@ -134,11 +134,11 @@ def summarize(records: list[ImageInfo], external_eval: dict[str, list[str]], dat
     class_counts = Counter(record.class_name for record in records)
     source_counts = Counter(record.source_name for record in records)
     type_counts = Counter(record.image_type or "unknown" for record in records)
-    corrupt_files = [str(record.path) for record in records if record.is_corrupt]
+    corrupt_files = [to_project_relative(record.path) for record in records if record.is_corrupt]
 
     duplicate_groups: dict[str, list[str]] = defaultdict(list)
     for record in records:
-        duplicate_groups[record.sha256_prefix].append(str(record.path))
+        duplicate_groups[record.sha256_prefix].append(to_project_relative(record.path))
     duplicates = [paths for paths in duplicate_groups.values() if len(paths) > 1]
 
     widths = [record.width for record in records if record.width]
@@ -222,8 +222,8 @@ def main() -> None:
     write_markdown(md_path, summary)
 
     print(json.dumps(summary, indent=2, ensure_ascii=False))
-    print(f"\nInforme JSON: {json_path}")
-    print(f"Informe Markdown: {md_path}")
+    print(f"\nInforme JSON: {to_project_relative(json_path)}")
+    print(f"Informe Markdown: {to_project_relative(md_path)}")
 
 
 if __name__ == "__main__":

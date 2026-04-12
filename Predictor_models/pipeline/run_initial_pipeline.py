@@ -18,7 +18,7 @@ else:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Ejecuta la pipeline inicial del proyecto.")
-    parser.add_argument("--config", default="Predictor_models/configs/binary_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     parser.add_argument("--model", default=None, help="Modelo a entrenar y evaluar.")
     parser.add_argument("--skip-audit", action="store_true", help="Omite la auditoria del dataset.")
     parser.add_argument("--skip-prepare", action="store_true", help="Omite la generacion de manifiesto y splits.")

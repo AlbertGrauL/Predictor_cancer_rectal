@@ -4,9 +4,11 @@ import csv
 from pathlib import Path
 from typing import Callable
 
+from .utils import resolve_path
+
 
 def load_manifest(path: str | Path, split: str | None = None) -> list[dict[str, str]]:
-    resolved = Path(path)
+    resolved = resolve_path(path)
     rows: list[dict[str, str]] = []
     with resolved.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
@@ -39,7 +41,7 @@ class ImageClassificationDataset:
 
     def __getitem__(self, index: int):
         row = self.rows[index]
-        image = self._image_cls.open(row["path"]).convert("RGB")
+        image = self._image_cls.open(resolve_path(row["path"])).convert("RGB")
         label = self.class_to_idx[row["class_name"]]
         if self.transform is not None:
             image = self.transform(image)
