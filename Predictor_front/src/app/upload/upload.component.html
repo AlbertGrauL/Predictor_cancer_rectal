@@ -1,0 +1,219 @@
+<main class="pt-32 pb-20 px-6 max-w-5xl mx-auto">
+<!-- Header Section -->
+<header class="mb-16 text-center max-w-2xl mx-auto">
+<h1 class="font-headline text-4xl font-bold tracking-tight text-on-surface mb-4">Cargar Imagen Diagnóstica</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+            Cargue de forma segura sus imágenes médicas y proporcione contexto clínico para una evaluación exhaustiva impulsada por IA.
+        </p>
+</header>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Main Form Area -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Upload Area -->
+<div class="bg-surface-container-lowest p-10 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)] group transition-all">
+<div class="border-2 border-dashed border-outline-variant/30 rounded-2xl bg-surface-container-low hover:bg-primary-fixed transition-colors duration-300 flex flex-col items-center justify-center py-20 px-6 cursor-pointer">
+<div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-6 text-primary-container">
+<span class="material-symbols-outlined text-4xl" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<h3 class="font-headline text-xl font-semibold mb-2">Arrastre y suelte la imagen aquí</h3>
+<p class="text-on-surface-variant mb-8 text-center max-w-xs">Formatos admitidos: JPG, PNG, DICOM. Tamaño máximo de archivo 5MB.</p>
+<button class="px-8 py-3 bg-primary-container text-on-primary rounded-xl font-semibold hover:shadow-lg transition-all flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
+                        Buscar Archivos
+                    </button>
+</div>
+</div>
+<!-- Clinical Questionnaire -->
+<div class="bg-surface-container-lowest p-8 md:p-10 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)]">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="assignment">assignment</span>
+<h2 class="font-headline text-2xl font-bold">Cuestionario Clínico</h2>
+</div>
+<form class="space-y-10" [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+<!-- Demographic & Lifestyle -->
+<section>
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6 pb-2 border-b border-surface-container-highest">1. Demografía y Estilo de Vida</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Sexo Biológico</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 text-primary border-outline focus:ring-primary" name="sex" formControlName="sex" type="radio" value="male"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Masculino</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 text-primary border-outline focus:ring-primary" name="sex" formControlName="sex" type="radio" value="female"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Femenino</span>
+</label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Consumo de Tabaco</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary transition-all" formControlName="tobacco">
+<option value="never">Nunca</option>
+<option value="currently">Actualmente</option>
+<option value="former">Exfumador</option>
+</select>
+</div>
+<div class="space-y-3 md:col-span-2">
+<label class="block text-sm font-semibold text-on-surface">Consumo de Alcohol</label>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" formControlName="alcohol" type="radio" value="none"/>
+<span class="text-xs font-medium">Ninguno</span>
+</label>
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" formControlName="alcohol" type="radio" value="regularly"/>
+<span class="text-xs font-medium">Regularmente</span>
+</label>
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" formControlName="alcohol" type="radio" value="former"/>
+<span class="text-xs font-medium">Antes</span>
+</label>
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" formControlName="alcohol" type="radio" value="occasional"/>
+<span class="text-xs font-medium">Ocasional</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Medical History -->
+<section>
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6 pb-2 border-b border-surface-container-highest">2. Historial Médico</h3>
+<div class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">¿Radioterapia Previa?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="radiotherapy" type="radio" value="yes"/><span class="text-sm">Sí</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="radiotherapy" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">¿Diabetes?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="diabetes" type="radio" value="yes"/><span class="text-sm">Sí</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="diabetes" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">¿Diagnóstico Formal de Cáncer?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="formalCancer" type="radio" value="yes"/><span class="text-sm">Sí</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="formalCancer" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">¿Antecedentes familiares de cáncer digestivo?</label>
+<div class="flex flex-col sm:flex-row gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="familyHistory" type="radio" value="no"/><span class="text-sm">No</span></label>
+<div class="flex-1 flex items-center gap-3">
+<label class="flex items-center gap-2 cursor-pointer shrink-0"><input class="text-primary" formControlName="familyHistory" type="radio" value="yes"/><span class="text-sm">Sí (Especifique):</span></label>
+<input class="flex-1 bg-surface-container-low border-none rounded-lg py-1.5 px-3 text-sm focus:ring-1 focus:ring-primary" formControlName="familyHistoryDetails" placeholder="ej. Colon, Gástrico..." type="text"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Symptoms & Observations -->
+<section>
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6 pb-2 border-b border-surface-container-highest">3. Síntomas y Observaciones</h3>
+<div class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">¿Sangre en heces / Sangre oculta?</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="bloodInStool" type="radio" value="yes"/><span class="text-sm">Sí</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="bloodInStool" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">¿Rectorragia (Sangrado por el ano)?</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="rectorrhagia" type="radio" value="yes"/><span class="text-sm">Sí</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="rectorrhagia" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Hábitos Intestinales (Cambios Recientes)</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary transition-all" formControlName="intestinalHabits">
+<option value="normal">Normal</option>
+<option value="alternating">Alternancia Estreñimiento/Diarrea</option>
+<option value="diarrhea">Diarrea</option>
+<option value="incontinence">Incontinencia</option>
+<option value="constipation">Estreñimiento</option>
+<option value="others">Otros (Dolor o heces delgadas)</option>
+</select>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Tenesmo (Sensación de evacuación incompleta)</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="tenesmus" type="radio" value="yes"/><span class="text-sm">Sí</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" formControlName="tenesmus" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="pt-6">
+<button class="w-full py-4 bg-primary text-on-primary rounded-2xl font-bold hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                            Enviar para Análisis de IA
+                        </button>
+<p class="mt-4 text-center text-xs text-on-surface-variant">Al enviar, acepta que esta es una herramienta de evaluación preliminar y no un diagnóstico definitivo.</p>
+</div>
+</form>
+</div>
+<!-- Trust Badges -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="verified_user">verified_user</span>
+<div>
+<h4 class="font-semibold text-sm mb-1">Compatible con HIPAA</h4>
+<p class="text-xs text-on-surface-variant">Sus datos de salud están protegidos por estándares federales de privacidad.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="lock">lock</span>
+<div>
+<h4 class="font-semibold text-sm mb-1">Encriptación AES-256</h4>
+<p class="text-xs text-on-surface-variant">Los datos están encriptados en reposo y en tránsito para una seguridad total.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Info -->
+<div class="space-y-6">
+<div class="bg-white p-8 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-tertiary rounded-full"></div>
+<h3 class="font-headline text-lg font-bold mb-4">Pautas</h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Asegure un alto contraste y un enfoque claro.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Evite el deslumbramiento o los reflejos en la pantalla.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Capture toda la región de interés.</span>
+</li>
+</ul>
+</div>
+<!-- Decorative Clinical Context -->
+<div class="rounded-[2rem] overflow-hidden aspect-square relative group">
+<img alt="Clinical Lab Environment" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-end medical laboratory with soft blue ambient lighting and advanced diagnostic equipment in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMDmKutHYFiEb6w4Ql4Q01u5A5hEtFsZifCMRmJnlcUIiKSYstlGviF43ZFhc16CORl2B8dOsBSPGAG956d6NiuhV2JD9Oh9h50PaaJroQlaAiHytlwjX7VF__-moQf3iqkHs9c26R4cf1bbtH0qMQXuFd9zfjt5jI7kvPO2tHXT3IOeo4KJI4DP1X29Duy4hZTenE9lkG4OOXFbbuMjbT4oJT5vE_gVdsm20E6Tqy29AJqfu_ccbAfVwYDSWkjLDrm_ZREvmrsc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex items-end p-8">
+<p class="text-white text-sm font-medium leading-snug">Precisión de nivel experto impulsada por redes neuronales avanzadas.</p>
+</div>
+</div>
+</div>
+</div>
+</main>

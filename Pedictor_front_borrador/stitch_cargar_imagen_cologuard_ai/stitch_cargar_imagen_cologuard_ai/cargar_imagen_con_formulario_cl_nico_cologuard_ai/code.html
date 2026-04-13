@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Upload Analysis - ColoGuard AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#a8e7c5",
+              "inverse-primary": "#a9c7ff",
+              "on-surface": "#191c1e",
+              "error": "#ba1a1a",
+              "surface": "#f9f9fd",
+              "surface-container-highest": "#e2e2e6",
+              "on-tertiary": "#ffffff",
+              "surface-container": "#edeef1",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#002114",
+              "inverse-on-surface": "#f0f0f4",
+              "on-background": "#191c1e",
+              "primary": "#00478d",
+              "primary-fixed": "#d6e3ff",
+              "surface-container-low": "#f3f3f7",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#bcece7",
+              "outline": "#727783",
+              "on-error-container": "#93000a",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#2d6a4f",
+              "inverse-surface": "#2e3133",
+              "surface-container-high": "#e7e8eb",
+              "primary-fixed-dim": "#a9c7ff",
+              "surface-tint": "#005db6",
+              "on-secondary-fixed-variant": "#1f4e4b",
+              "background": "#f9f9fd",
+              "primary-container": "#005eb8",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed-variant": "#0e5138",
+              "on-primary-container": "#c8daff",
+              "on-secondary-container": "#3d6a67",
+              "surface-bright": "#f9f9fd",
+              "outline-variant": "#c2c6d4",
+              "surface-dim": "#d9dadd",
+              "tertiary-fixed-dim": "#95d4b3",
+              "on-surface-variant": "#424752",
+              "surface-variant": "#e2e2e6",
+              "secondary": "#396663",
+              "secondary-fixed-dim": "#a0d0cb",
+              "on-primary-fixed-variant": "#00468c",
+              "tertiary-fixed": "#b1f0ce",
+              "on-primary-fixed": "#001b3d",
+              "secondary-container": "#b9e9e4",
+              "tertiary": "#0f5238",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed": "#00201e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(249, 249, 253, 0.7);
+            backdrop-filter: blur(20px);
+        }
+        input[type="radio"]:checked {
+            background-color: #00478d;
+            border-color: #00478d;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+<div class="text-2xl font-bold tracking-tighter text-blue-900 dark:text-blue-100 font-headline">ColoGuard AI</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" href="#">Home</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" href="#">How it Works</a>
+<a class="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-600 pb-1 font-inter" href="#">Upload</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" href="#">Results</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" href="#">FAQ</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2.5 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-semibold text-sm hover:opacity-90 transition-all active:scale-95">
+                Start Analysis
+            </button>
+<button class="hidden md:block text-slate-500 font-medium hover:text-primary transition-colors">Contact</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-20 px-6 max-w-5xl mx-auto">
+<!-- Header Section -->
+<header class="mb-16 text-center max-w-2xl mx-auto">
+<h1 class="font-headline text-4xl font-bold tracking-tight text-on-surface mb-4">Upload Diagnostic Image</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+            Securely upload your medical imaging and provide clinical context for a comprehensive AI-driven assessment.
+        </p>
+</header>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Main Form Area -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Upload Area -->
+<div class="bg-surface-container-lowest p-10 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)] group transition-all">
+<div class="border-2 border-dashed border-outline-variant/30 rounded-2xl bg-surface-container-low hover:bg-primary-fixed transition-colors duration-300 flex flex-col items-center justify-center py-20 px-6 cursor-pointer">
+<div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-6 text-primary-container">
+<span class="material-symbols-outlined text-4xl" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<h3 class="font-headline text-xl font-semibold mb-2">Drag and drop imaging here</h3>
+<p class="text-on-surface-variant mb-8 text-center max-w-xs">Supported formats: JPG, PNG, DICOM. Maximum file size 5MB.</p>
+<button class="px-8 py-3 bg-primary-container text-on-primary rounded-xl font-semibold hover:shadow-lg transition-all flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
+                        Browse Files
+                    </button>
+</div>
+</div>
+<!-- Clinical Questionnaire -->
+<div class="bg-surface-container-lowest p-8 md:p-10 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)]">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="assignment">assignment</span>
+<h2 class="font-headline text-2xl font-bold">Clinical Questionnaire</h2>
+</div>
+<form class="space-y-10">
+<!-- Demographic & Lifestyle -->
+<section>
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6 pb-2 border-b border-surface-container-highest">1. Demographics &amp; Lifestyle</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Biological Sex</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 text-primary border-outline focus:ring-primary" name="sex" type="radio" value="male"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Male</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 text-primary border-outline focus:ring-primary" name="sex" type="radio" value="female"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Female</span>
+</label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Tobacco Use</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary transition-all">
+<option value="never">Never</option>
+<option value="currently">Currently</option>
+<option value="former">Former smoker</option>
+</select>
+</div>
+<div class="space-y-3 md:col-span-2">
+<label class="block text-sm font-semibold text-on-surface">Alcohol Consumption</label>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" name="alcohol" type="radio" value="none"/>
+<span class="text-xs font-medium">None</span>
+</label>
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" name="alcohol" type="radio" value="regularly"/>
+<span class="text-xs font-medium">Regularly</span>
+</label>
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" name="alcohol" type="radio" value="former"/>
+<span class="text-xs font-medium">Former</span>
+</label>
+<label class="bg-surface-container-low p-3 rounded-xl border border-transparent hover:border-primary/30 cursor-pointer flex items-center gap-2 transition-colors has-[:checked]:bg-primary-fixed has-[:checked]:border-primary">
+<input class="w-4 h-4 text-primary border-outline" name="alcohol" type="radio" value="occasional"/>
+<span class="text-xs font-medium">Occasional</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Medical History -->
+<section>
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6 pb-2 border-b border-surface-container-highest">2. Medical History</h3>
+<div class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Previous Radiotherapy?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="rt" type="radio" value="yes"/><span class="text-sm">Yes</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="rt" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Diabetes?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="diabetes" type="radio" value="yes"/><span class="text-sm">Yes</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="diabetes" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Formal Cancer Diagnosis?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="formal" type="radio" value="yes"/><span class="text-sm">Yes</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="formal" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Family history of digestive cancer?</label>
+<div class="flex flex-col sm:flex-row gap-4">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="family" type="radio" value="no"/><span class="text-sm">No</span></label>
+<div class="flex-1 flex items-center gap-3">
+<label class="flex items-center gap-2 cursor-pointer shrink-0"><input class="text-primary" name="family" type="radio" value="yes"/><span class="text-sm">Yes (Specify):</span></label>
+<input class="flex-1 bg-surface-container-low border-none rounded-lg py-1.5 px-3 text-sm focus:ring-1 focus:ring-primary" placeholder="e.g. Colon, Gastric..." type="text"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Symptoms & Observations -->
+<section>
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6 pb-2 border-b border-surface-container-highest">3. Symptoms &amp; Observations</h3>
+<div class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Blood in stool / Occult blood?</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="blood" type="radio" value="yes"/><span class="text-sm">Yes</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="blood" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Rectorrhagia (Bleeding via anus)?</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="rectorrhagia" type="radio" value="yes"/><span class="text-sm">Yes</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="rectorrhagia" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Intestinal Habits (Recent Changes)</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary transition-all">
+<option value="normal">Normal</option>
+<option value="alternating">Constipation/Diarrhea Alternating</option>
+<option value="diarrhea">Diarrhea</option>
+<option value="incontinence">Incontinence</option>
+<option value="constipation">Constipation</option>
+<option value="others">Others (Pain or thin stools)</option>
+</select>
+</div>
+<div class="space-y-3">
+<label class="block text-sm font-semibold text-on-surface">Tenesmus (Incomplete evacuation sensation)</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="tenesmus" type="radio" value="yes"/><span class="text-sm">Yes</span></label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="text-primary" name="tenesmus" type="radio" value="no"/><span class="text-sm">No</span></label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="pt-6">
+<button class="w-full py-4 bg-primary text-on-primary rounded-2xl font-bold hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                            Submit for AI Analysis
+                        </button>
+<p class="mt-4 text-center text-xs text-on-surface-variant">By submitting, you agree that this is a preliminary screening tool and not a definitive diagnosis.</p>
+</div>
+</form>
+</div>
+<!-- Trust Badges -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="verified_user">verified_user</span>
+<div>
+<h4 class="font-semibold text-sm mb-1">HIPAA Compliant</h4>
+<p class="text-xs text-on-surface-variant">Your health data is protected by federal privacy standards.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="lock">lock</span>
+<div>
+<h4 class="font-semibold text-sm mb-1">AES-256 Encryption</h4>
+<p class="text-xs text-on-surface-variant">Data is encrypted at rest and in transit for total security.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Info -->
+<div class="space-y-6">
+<div class="bg-white p-8 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-tertiary rounded-full"></div>
+<h3 class="font-headline text-lg font-bold mb-4">Guidelines</h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Ensure high contrast and clear focus.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Avoid glare or reflections on the screen.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Capture the entire region of interest.</span>
+</li>
+</ul>
+</div>
+<!-- Decorative Clinical Context -->
+<div class="rounded-[2rem] overflow-hidden aspect-square relative group">
+<img alt="Clinical Lab Environment" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-end medical laboratory with soft blue ambient lighting and advanced diagnostic equipment in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMDmKutHYFiEb6w4Ql4Q01u5A5hEtFsZifCMRmJnlcUIiKSYstlGviF43ZFhc16CORl2B8dOsBSPGAG956d6NiuhV2JD9Oh9h50PaaJroQlaAiHytlwjX7VF__-moQf3iqkHs9c26R4cf1bbtH0qMQXuFd9zfjt5jI7kvPO2tHXT3IOeo4KJI4DP1X29Duy4hZTenE9lkG4OOXFbbuMjbT4oJT5vE_gVdsm20E6Tqy29AJqfu_ccbAfVwYDSWkjLDrm_ZREvmrsc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex items-end p-8">
+<p class="text-white text-sm font-medium leading-snug">Expert-level precision powered by advanced neural networks.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full border-t border-slate-100 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto px-8 py-12">
+<div class="space-y-4">
+<div class="font-manrope font-bold text-lg text-slate-900 dark:text-slate-100">ColoGuard Medical Systems</div>
+<p class="font-inter text-sm text-slate-500 dark:text-slate-400 max-w-xs">
+                Advancing early detection through empathetic technology and clinical precision.
+            </p>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-2">Legal &amp; Ethical</h4>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" href="#">Privacy Policy</a>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" href="#">Terms of Service</a>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" href="#">Medical Disclaimer</a>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-2">Support</h4>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" href="#">Contact Support</a>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" href="#">Documentation</a>
+<div class="pt-4">
+<p class="font-inter text-xs text-slate-400">© 2024 ColoGuard Medical Systems. For preliminary screening only.</p>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

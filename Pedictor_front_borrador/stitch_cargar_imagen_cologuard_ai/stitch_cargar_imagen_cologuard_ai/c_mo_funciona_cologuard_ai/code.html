@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cómo Funciona - Clinical Sanctuary AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#f9f9fd",
+              "on-secondary": "#ffffff",
+              "background": "#f9f9fd",
+              "primary-fixed-dim": "#a9c7ff",
+              "on-tertiary-fixed-variant": "#0e5138",
+              "secondary-container": "#b9e9e4",
+              "on-background": "#191c1e",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e7e8eb",
+              "tertiary-container": "#2d6a4f",
+              "surface-tint": "#005db6",
+              "primary-fixed": "#d6e3ff",
+              "on-secondary-fixed": "#00201e",
+              "on-primary-fixed": "#001b3d",
+              "on-secondary-container": "#3d6a67",
+              "secondary-fixed": "#bcece7",
+              "outline-variant": "#c2c6d4",
+              "tertiary-fixed": "#b1f0ce",
+              "on-primary": "#ffffff",
+              "outline": "#727783",
+              "primary-container": "#005eb8",
+              "on-primary-fixed-variant": "#00468c",
+              "surface-dim": "#d9dadd",
+              "secondary-fixed-dim": "#a0d0cb",
+              "on-tertiary-container": "#a8e7c5",
+              "on-secondary-fixed-variant": "#1f4e4b",
+              "tertiary-fixed-dim": "#95d4b3",
+              "tertiary": "#0f5238",
+              "surface-container-highest": "#e2e2e6",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container": "#edeef1",
+              "surface": "#f9f9fd",
+              "inverse-primary": "#a9c7ff",
+              "on-surface": "#191c1e",
+              "on-primary-container": "#c8daff",
+              "surface-variant": "#e2e2e6",
+              "secondary": "#396663",
+              "inverse-surface": "#2e3133",
+              "on-surface-variant": "#424752",
+              "on-tertiary-fixed": "#002114",
+              "inverse-on-surface": "#f0f0f4",
+              "error": "#ba1a1a",
+              "surface-container-low": "#f3f3f7",
+              "on-error": "#ffffff",
+              "primary": "#00478d"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(249, 249, 253, 0.7);
+            backdrop-filter: blur(20px);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #00478d 0%, #005eb8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 h-20 w-full max-w-7xl mx-auto">
+<div class="text-xl font-bold text-blue-900 dark:text-blue-100 font-headline">
+                ClinicalSanctuaryAI
+            </div>
+<div class="hidden md:flex items-center gap-8 font-headline font-semibold tracking-tight">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-600 pb-1" href="#">How it Works</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors" href="#">Diagnostics</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors" href="#">Patient Portal</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors" href="#">Security</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-xl font-headline font-bold active:scale-95 duration-200 transition-all shadow-md">
+                    Get Started
+                </button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<header class="mb-20 text-center max-w-3xl mx-auto">
+<h1 class="font-headline text-5xl md:text-6xl font-bold tracking-tight text-on-background mb-6">
+                Cómo funciona el análisis de <span class="text-gradient">ColoGuard AI</span>
+</h1>
+<p class="text-on-surface-variant text-lg md:text-xl leading-relaxed">
+                Nuestro proceso utiliza inteligencia artificial avanzada para proporcionar un pre-diagnóstico preciso y rápido en 4 simples pasos.
+            </p>
+</header>
+<!-- Process Section - Bento Grid / Card Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+<!-- Step 1 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,30,0.04)] hover:shadow-[0_12px_32px_rgba(25,28,30,0.08)] transition-all duration-300 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary rounded-full"></div>
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<div>
+<span class="text-primary font-headline font-bold text-sm tracking-widest uppercase mb-2 block">Paso 01</span>
+<h3 class="text-2xl font-headline font-semibold text-on-background mb-3">Carga Segura de Imágenes</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            El usuario sube imágenes diagnósticas de forma segura y en alta resolución a nuestra plataforma encriptada.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,30,0.04)] hover:shadow-[0_12px_32px_rgba(25,28,30,0.08)] transition-all duration-300 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary rounded-full"></div>
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="settings_suggest">settings_suggest</span>
+</div>
+<div>
+<span class="text-primary font-headline font-bold text-sm tracking-widest uppercase mb-2 block">Paso 02</span>
+<h3 class="text-2xl font-headline font-semibold text-on-background mb-3">Pre-procesamiento con IA</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            Nuestro algoritmo normaliza la imagen, reduce el ruido y resalta las áreas de interés para asegurar la máxima precisión analítica.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,30,0.04)] hover:shadow-[0_12px_32px_rgba(25,28,30,0.08)] transition-all duration-300 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary rounded-full"></div>
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="neurology" data-weight="fill" style="font-variation-settings: 'FILL' 1;">neurology</span>
+</div>
+<div>
+<span class="text-primary font-headline font-bold text-sm tracking-widest uppercase mb-2 block">Paso 03</span>
+<h3 class="text-2xl font-headline font-semibold text-on-background mb-3">Análisis de Redes Neuronales</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            Una red neuronal convolucional (CNN) entrenada con miles de casos clínicos analiza patrones y texturas buscando anomalías imperceptibles.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,30,0.04)] hover:shadow-[0_12px_32px_rgba(25,28,30,0.08)] transition-all duration-300 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary rounded-full"></div>
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="description">description</span>
+</div>
+<div>
+<span class="text-primary font-headline font-bold text-sm tracking-widest uppercase mb-2 block">Paso 04</span>
+<h3 class="text-2xl font-headline font-semibold text-on-background mb-3">Reporte de Probabilidad</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            El sistema genera un informe detallado con un índice de riesgo y mapas de calor para apoyo médico profesional inmediato.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Confidence Gauge / Visual Element -->
+<div class="mb-24 bg-surface-container-low rounded-xl p-10 flex flex-col md:flex-row items-center gap-12">
+<div class="w-full md:w-1/2">
+<h2 class="font-headline text-3xl font-bold mb-6">Precisión Impulsada por Datos</h2>
+<p class="text-on-surface-variant mb-8 leading-relaxed">
+                    Nuestra infraestructura de IA está optimizada para detectar patrones celulares complejos que sirven como indicadores tempranos, permitiendo una intervención oportuna.
+                </p>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-sm font-semibold text-on-background">Sensibilidad de Detección</span>
+<span class="text-sm font-bold text-tertiary">98.4%</span>
+</div>
+<div class="h-3 w-full bg-tertiary-container/20 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[98.4%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-sm font-semibold text-on-background">Tiempo de Procesamiento</span>
+<span class="text-sm font-bold text-tertiary">~45 segundos</span>
+</div>
+<div class="h-3 w-full bg-tertiary-container/20 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[85%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<div class="aspect-video bg-white rounded-xl shadow-inner overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-80" data-alt="high-tech laboratory monitor showing a medical scan with digital neural network overlays in a clean blue clinical environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9BFRxwXshewGsZURKXUbQvkzjMVhmA1yzyXbos0-mXqROQJaoWvjZcMg02UzBB3oyGTH5Q7pQCNejrC4egA95Sumx9xdMlbhZxjQcG2zhNGGMNY8Q6sb0-DNKoNhpbrkIogrtG0gwqro0dlvNKVCtlP9AbeNwU8D25cp5RLiQLvanjUbC9l989aiZZeHWpuXRuM5IoJ2XFKAGR4qJPRQmz-aoz227nabxC8cecDjJCHnCaDEoTBCWFv5U6iswcsd2AZSyUhneOhM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent flex items-center justify-center">
+<div class="bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary animate-pulse" data-icon="check_circle">check_circle</span>
+<span class="font-headline font-bold text-primary">Análisis en Tiempo Real Activo</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Security & Disclaimer Section -->
+<section class="bg-surface-container-lowest border-l-4 border-tertiary p-8 md:p-12 rounded-xl shadow-sm mb-12">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="flex-grow">
+<div class="flex items-center gap-2 mb-4 text-tertiary">
+<span class="material-symbols-outlined" data-icon="security" data-weight="fill" style="font-variation-settings: 'FILL' 1;">security</span>
+<h4 class="font-headline font-bold text-lg uppercase tracking-wider">Seguridad y Compromiso Clínico</h4>
+</div>
+<p class="text-on-surface-variant leading-relaxed text-balance">
+                        Esta herramienta es un apoyo diagnóstico y no sustituye el juicio clínico de un oncólogo. Sus datos están protegidos mediante procesamiento en la nube encriptado y estrictos protocolos de privacidad.
+                    </p>
+</div>
+<div class="flex flex-wrap gap-4 justify-center md:justify-end shrink-0">
+<div class="flex items-center gap-2 px-4 py-3 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="lock">lock</span>
+<span class="text-xs font-bold text-on-surface-variant">AES-256 ENCRYPTION</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-3 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="verified_user">verified_user</span>
+<span class="text-xs font-bold text-on-surface-variant">HIPAA COMPLIANT</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-12 gap-6 w-full max-w-7xl mx-auto">
+<div class="flex flex-col gap-2 items-center md:items-start">
+<div class="text-lg font-bold text-slate-900 dark:text-slate-100 font-headline">
+                    Clinical Sanctuary AI
+                </div>
+<p class="font-body text-sm text-slate-500 dark:text-slate-400">
+                    © 2024 Clinical Sanctuary AI. For professional diagnostic support only.
+                </p>
+</div>
+<div class="flex gap-8 flex-wrap justify-center">
+<a class="font-body text-sm text-slate-500 hover:text-blue-500 hover:underline transition-all" href="#">Medical Disclaimer</a>
+<a class="font-body text-sm text-slate-500 hover:text-blue-500 hover:underline transition-all" href="#">Privacy Policy</a>
+<a class="font-body text-sm text-slate-500 hover:text-blue-500 hover:underline transition-all" href="#">Terms of Service</a>
+<a class="font-body text-sm text-slate-500 hover:text-blue-500 hover:underline transition-all" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>
