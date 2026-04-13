@@ -31,6 +31,13 @@ dataset:
       - Sangre_Paredes
   external_eval_sources: {}
 
+preprocessing:
+  bottom_left_mask:
+    enabled: true
+    width_ratio: 0.30
+    height_ratio: 0.35
+    fill: 0
+
 training:
   batch_size: 16
   epochs: 10
@@ -45,12 +52,9 @@ training:
 models:
   baseline: efficientnet_b0
   candidates:
-    - resnet18
     - resnet50
     - efficientnet_b0
-    - efficientnet_b2
     - densenet121
-    - convnext_tiny
 
 logging:
   experiment_name: baseline_multiclase

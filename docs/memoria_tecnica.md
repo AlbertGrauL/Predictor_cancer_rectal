@@ -60,10 +60,10 @@ Para la configuracion actual:
 ### 5.1 Modelos comparados
 
 - `ResNet50`: baseline robusta y facil de justificar academicamente
-- `EfficientNet-B0/B2`: opcion principal por su buena relacion coste-rendimiento
+- `EfficientNet-B0`: opcion principal por su buena relacion coste-rendimiento
 - `DenseNet121`: alternativa solida en imagen medica
-- `ResNet18`: baseline ligera para pruebas rapidas
-- `ConvNeXt-Tiny`: opcion moderna si el hardware lo permite
+
+Estas tres arquitecturas se han seleccionado para evitar comparaciones innecesarias y concentrar el proyecto en modelos equilibrados, interpretables y razonables para el volumen de datos disponible.
 
 ### 5.2 Estrategia de entrenamiento
 

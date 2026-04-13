@@ -82,7 +82,8 @@ def main() -> None:
     class_to_idx = {name: index for index, name in enumerate(class_names)}
     positive_index = class_to_idx[config["training"]["positive_class_name"]]
     image_size = config["dataset"]["image_size"]
-    train_transform, eval_transform = build_transforms(image_size)
+    preprocessing = config.get("preprocessing", {})
+    train_transform, eval_transform = build_transforms(image_size, preprocessing=preprocessing)
 
     train_rows = load_manifest(manifest_path, split="train")
     val_rows = load_manifest(manifest_path, split="val")

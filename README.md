@@ -1,6 +1,6 @@
 # Predictor Multiclase de Polipos y Patologias Relacionadas con Cancer Rectal
 
-Proyecto academico para clasificacion multiclase de imagenes endoscopicas orientado a la prediccion `polipo / sano / otras_patologias`.
+Proyecto academico para clasificacion multiclase de imagenes endoscopicas orientado a la prediccion `polipo / sano / otras_patologias`, centrado en tres CNN recomendadas para este problema.
 
 ## Objetivos
 
@@ -78,7 +78,7 @@ El segundo ejecuta:
 
 - auditoria
 - preparacion de splits
-- entrenamiento y evaluacion de cada CNN candidata
+- entrenamiento y evaluacion de las tres CNN recomendadas
 - resumen CSV comparativo final
 
 Tambien puedes lanzarlos desde terminal:
@@ -122,14 +122,11 @@ Ejemplo con EfficientNet-B0:
 uv run python -m Predictor_models.pipeline.train --config Predictor_models/configs/multiclass_baseline.yaml --model efficientnet_b0
 ```
 
-Modelos preparados:
+Modelos recomendados y activos en el proyecto:
 
-- `resnet18`
 - `resnet50`
 - `efficientnet_b0`
-- `efficientnet_b2`
 - `densenet121`
-- `convnext_tiny`
 
 ### 4. Evaluar un checkpoint
 

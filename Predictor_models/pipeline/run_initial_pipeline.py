@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Ejecuta la pipeline inicial del proyecto.")
     parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     parser.add_argument("--model", default=None, help="Modelo a entrenar y evaluar.")
+    parser.add_argument("--clean", action="store_true", help="Limpia artefactos previos antes de empezar.")
     parser.add_argument("--skip-audit", action="store_true", help="Omite la auditoria del dataset.")
     parser.add_argument("--skip-prepare", action="store_true", help="Omite la generacion de manifiesto y splits.")
     return parser.parse_args()
@@ -37,6 +38,13 @@ def main() -> None:
     model_name = args.model or config["models"]["baseline"]
     root = resolve_path(".")
     checkpoint = root / "Predictor_models" / "artifacts" / "checkpoints" / f"{model_name}_best.pt"
+
+    if args.clean:
+        run_step(
+            [sys.executable, "-m", "Predictor_models.pipeline.clean_artifacts", "--config", args.config],
+            "0. Limpieza de artefactos previos",
+            root,
+        )
 
     if not args.skip_audit:
         run_step(

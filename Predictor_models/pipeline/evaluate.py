@@ -74,7 +74,7 @@ def external_eval(config: dict, class_to_idx: dict[str, int], model, device, thr
     paths = load_paths(config)
     dataset_cfg = config["dataset"]
     extensions = {ext.lower() for ext in dataset_cfg["extensions"]}
-    _, eval_transform = build_transforms(dataset_cfg["image_size"])
+    _, eval_transform = build_transforms(dataset_cfg["image_size"], preprocessing=config.get("preprocessing", {}))
 
     if not dataset_cfg.get("external_eval_sources"):
         return {}
@@ -151,7 +151,10 @@ def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device)
 
-    _, eval_transform = build_transforms(config["dataset"]["image_size"])
+    _, eval_transform = build_transforms(
+        config["dataset"]["image_size"],
+        preprocessing=config.get("preprocessing", {}),
+    )
     test_rows = load_manifest(args.manifest, split="test")
     if args.max_samples:
         test_rows = sample_rows(test_rows, args.max_samples, config["project"]["random_seed"])

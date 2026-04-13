@@ -26,10 +26,14 @@ class Predictor:
         self.class_names = metadata["class_names"]
         self.model_name = metadata["model_name"]
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        _, self.eval_transform = build_transforms(image_size)
 
         self.model = build_model(self.model_name, len(self.class_names), pretrained=False)
         payload = torch.load(self.checkpoint_path, map_location=self.device)
+        payload_config = payload.get("config", {})
+        dataset_cfg = payload_config.get("dataset", {})
+        preprocessing = payload_config.get("preprocessing", {})
+        effective_image_size = int(dataset_cfg.get("image_size", image_size))
+        _, self.eval_transform = build_transforms(effective_image_size, preprocessing=preprocessing)
         state_dict = payload["model_state_dict"] if "model_state_dict" in payload else payload
         self.model.load_state_dict(state_dict)
         self.model.to(self.device)
