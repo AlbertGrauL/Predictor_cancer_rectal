@@ -19,7 +19,11 @@ else:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Ejecuta la comparacion completa de modelos.")
     parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
-    parser.add_argument("--clean", action="store_true", help="Limpia artefactos previos antes de empezar.")
+    parser.add_argument(
+        "--no-clean",
+        action="store_true",
+        help="Conserva artefactos previos y omite la limpieza inicial.",
+    )
     parser.add_argument("--skip-audit", action="store_true", help="Omite la auditoria del dataset.")
     parser.add_argument("--skip-prepare", action="store_true", help="Omite la preparacion del manifiesto.")
     parser.add_argument(
@@ -43,7 +47,7 @@ def main() -> None:
     root = resolve_path(".")
     models = args.models or config["models"]["candidates"]
 
-    if args.clean:
+    if not args.no_clean:
         run_step(
             [sys.executable, "-m", "Predictor_models.pipeline.clean_artifacts", "--config", args.config],
             "0. Limpieza de artefactos previos",
