@@ -30,7 +30,7 @@ Predictor_models/
   configs/                # Configuracion YAML del pipeline
   data/                   # Dataset local (ignorado por Git)
   pipeline/               # Codigo de auditoria, preparacion, entrenamiento y evaluacion
-Predictor_front/
+Predictor_models/app/
   app.py                  # Aplicacion Streamlit
 Predictor_api/
   README.md               # Espacio reservado para una futura API
@@ -64,8 +64,8 @@ uv sync
 
 Si quieres ejecutarlo sin escribir toda la secuencia a mano, en la raiz del proyecto tienes:
 
-- [ejecutar_pipeline_inicial.bat](ejecutar_pipeline_inicial.bat)
-- [ejecutar_comparacion_modelos.bat](ejecutar_comparacion_modelos.bat)
+- [ejecutar_reentreno_base_multiclase.bat](ejecutar_reentreno_base_multiclase.bat)
+- [ejecutar_reentreno_completo_multiclase.bat](ejecutar_reentreno_completo_multiclase.bat)
 
 El primero ejecuta:
 
@@ -84,8 +84,8 @@ El segundo ejecuta:
 Tambien puedes lanzarlos desde terminal:
 
 ```bash
-.\ejecutar_pipeline_inicial.bat
-.\ejecutar_comparacion_modelos.bat
+.\ejecutar_reentreno_base_multiclase.bat
+.\ejecutar_reentreno_completo_multiclase.bat
 ```
 
 ### 1. Auditar el dataset
@@ -147,7 +147,7 @@ Genera:
 ### 5. Lanzar la app de Streamlit
 
 ```bash
-uv run streamlit run Predictor_front/app.py
+uv run streamlit run Predictor_models/app/app.py
 ```
 
 ## Orquestadores Python

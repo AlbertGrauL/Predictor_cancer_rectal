@@ -40,14 +40,41 @@ preprocessing:
 
 training:
   batch_size: 16
-  epochs: 10
+  epochs: 20
   num_workers: 0
-  learning_rate: 0.0003
-  weight_decay: 0.0001
-  early_stopping_patience: 3
+  early_stopping_patience: 5
   mixed_precision: false
   positive_class_name: polipo
   primary_metric: f1_macro
+
+optimizer:
+  name: adamw
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+
+scheduler:
+  name: reduce_on_plateau
+  mode: max
+  factor: 0.5
+  patience: 2
+
+loss:
+  name: cross_entropy
+  use_class_weights: true
+
+sampling:
+  use_weighted_sampler: false
+
+augmentation:
+  random_erasing:
+    enabled: true
+    p: 0.25
+    scale:
+      - 0.02
+      - 0.10
+    ratio:
+      - 0.3
+      - 3.3
 
 models:
   baseline: efficientnet_b0

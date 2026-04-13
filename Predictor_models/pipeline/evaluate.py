@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter, defaultdict
 import json
 import random
-from collections import defaultdict
 
 from .config import load_config
 from .dataset import ImageClassificationDataset, collate_with_rows, load_manifest
@@ -30,7 +30,7 @@ def sample_rows(rows, limit: int | None, seed: int):
     return sampled[:limit]
 
 
-def evaluate_loader(model, loader, device, threshold: float, positive_index: int):
+def evaluate_loader(model, loader, device, positive_index: int):
     import torch
 
     model.eval()
@@ -67,14 +67,52 @@ def evaluate_loader(model, loader, device, threshold: float, positive_index: int
     return y_true, y_pred, y_score, details
 
 
-def external_eval(config: dict, class_to_idx: dict[str, int], model, device, threshold: float, positive_index: int) -> dict:
+def summarize_confusions(details: list[dict[str, str | float | int]], class_names: list[str]) -> list[dict[str, int | str]]:
+    confusion_counter = Counter()
+    for item in details:
+        if item["y_true"] == item["y_pred"]:
+            continue
+        truth = class_names[int(item["y_true"])]
+        pred = class_names[int(item["y_pred"])]
+        confusion_counter[(truth, pred)] += 1
+    return [
+        {"true_class": truth, "predicted_class": pred, "count": count}
+        for (truth, pred), count in confusion_counter.most_common(10)
+    ]
+
+
+def build_source_alerts(by_source: dict[str, dict[str, int]]) -> list[dict[str, float | str]]:
+    rates = []
+    for source_name, values in by_source.items():
+        total = values.get("total", 0)
+        errors = values.get("errors", 0)
+        if total:
+            rates.append((source_name, errors / total))
+    if len(rates) < 2:
+        return []
+
+    avg_rate = sum(rate for _source, rate in rates) / len(rates)
+    alerts = []
+    for source_name, rate in rates:
+        if rate <= max(0.01, avg_rate * 0.5):
+            alerts.append({"source_name": source_name, "alert": "very_low_error_rate", "error_rate": rate})
+        elif rate >= avg_rate * 1.5:
+            alerts.append({"source_name": source_name, "alert": "high_error_rate", "error_rate": rate})
+    return alerts
+
+
+def external_eval(config: dict, class_to_idx: dict[str, int], model, device, positive_index: int) -> dict:
     import torch
     from torch.utils.data import DataLoader
 
     paths = load_paths(config)
     dataset_cfg = config["dataset"]
     extensions = {ext.lower() for ext in dataset_cfg["extensions"]}
-    _, eval_transform = build_transforms(dataset_cfg["image_size"], preprocessing=config.get("preprocessing", {}))
+    _, eval_transform = build_transforms(
+        dataset_cfg["image_size"],
+        preprocessing=config.get("preprocessing", {}),
+        augmentation=config.get("augmentation", {}),
+    )
 
     if not dataset_cfg.get("external_eval_sources"):
         return {}
@@ -112,7 +150,7 @@ def external_eval(config: dict, class_to_idx: dict[str, int], model, device, thr
             for images, _labels, _rows in loader:
                 images = images.to(device)
                 probabilities = torch.softmax(model(images), dim=1)[:, positive_index]
-                predicted_as_polipo += int((probabilities >= threshold).sum().item())
+                predicted_as_polipo += int(probabilities.argmax(dim=0).item() == positive_index) if images.size(0) == 1 else int((probabilities >= 0.5).sum().item())
                 total += images.size(0)
         summary[group_name] = {
             "images": total,
@@ -145,6 +183,19 @@ def main() -> None:
     positive_index = class_to_idx[config["training"]["positive_class_name"]]
 
     checkpoint = torch.load(resolve_path(args.checkpoint), map_location="cpu")
+    payload_config = checkpoint.get("config", config)
+    training_setup = checkpoint.get(
+        "training_setup",
+        {
+            "optimizer": payload_config.get("optimizer", {}),
+            "scheduler": payload_config.get("scheduler", {}),
+            "loss": payload_config.get("loss", {}),
+            "sampling": payload_config.get("sampling", {}),
+            "augmentation": payload_config.get("augmentation", {}),
+            "preprocessing": payload_config.get("preprocessing", {}),
+        },
+    )
+
     model_name = checkpoint["model_name"]
     model = build_model(model_name, num_classes=len(class_names), pretrained=False)
     model.load_state_dict(checkpoint["model_state_dict"])
@@ -154,6 +205,7 @@ def main() -> None:
     _, eval_transform = build_transforms(
         config["dataset"]["image_size"],
         preprocessing=config.get("preprocessing", {}),
+        augmentation=config.get("augmentation", {}),
     )
     test_rows = load_manifest(args.manifest, split="test")
     if args.max_samples:
@@ -166,13 +218,7 @@ def main() -> None:
         collate_fn=collate_with_rows,
     )
 
-    y_true, y_pred, y_score, details = evaluate_loader(
-        model,
-        test_loader,
-        device=device,
-        threshold=config["training"].get("threshold", 0.5),
-        positive_index=positive_index,
-    )
+    y_true, y_pred, y_score, details = evaluate_loader(model, test_loader, device=device, positive_index=positive_index)
     metrics = compute_classification_metrics(y_true, y_pred, y_score, class_names, positive_index)
     curve_paths = save_curves(y_true, y_score, paths.figures_dir, prefix=model_name, class_names=class_names)
 
@@ -183,20 +229,31 @@ def main() -> None:
         if item["y_true"] != item["y_pred"]:
             by_source[source]["errors"] += 1
 
+    by_source_with_rate = {
+        source_name: {
+            **values,
+            "error_rate": (values["errors"] / values["total"]) if values["total"] else 0.0,
+        }
+        for source_name, values in dict(by_source).items()
+    }
+
     report = {
         "model_name": model_name,
         "checkpoint": to_project_relative(args.checkpoint),
         "class_names": class_names,
         "metrics": metrics,
         "curve_paths": curve_paths,
-        "by_source": dict(by_source),
+        "by_source": by_source_with_rate,
+        "source_alerts": build_source_alerts(dict(by_source)),
+        "confusion_summary": summarize_confusions(details, class_names),
+        "preprocessing_signature": payload_config.get("preprocessing", config.get("preprocessing", {})),
+        "training_setup": training_setup,
         "hard_cases": [item for item in details if item["y_true"] != item["y_pred"]][:25],
         "external_eval": external_eval(
             config,
             class_to_idx,
             model,
             device,
-            config["training"].get("threshold", 0.5),
             positive_index,
         ),
     }

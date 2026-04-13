@@ -10,11 +10,11 @@ import streamlit as st
 from PIL import Image
 
 if __package__ in {None, ""}:
-    ROOT = Path(__file__).resolve().parents[1]
+    ROOT = Path(__file__).resolve().parents[2]
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
 else:
-    ROOT = Path(__file__).resolve().parents[1]
+    ROOT = Path(__file__).resolve().parents[2]
 
 from Predictor_models.pipeline.config import load_config
 from Predictor_models.pipeline.inference import Predictor
@@ -144,6 +144,25 @@ def comparison_dataframe(models: list[dict]) -> pd.DataFrame:
     return dataframe
 
 
+def training_conditions_dataframe(models: list[dict]) -> pd.DataFrame:
+    rows = []
+    for model in models:
+        evaluation = model.get("evaluation") or {}
+        training_setup = evaluation.get("training_setup") or (safe_json(model["metadata_path"]) or {}).get("training_setup", {})
+        preprocessing = training_setup.get("preprocessing", {})
+        rows.append(
+            {
+                "Modelo": model["label"],
+                "Mascara esquina": "Si" if preprocessing.get("bottom_left_mask", {}).get("enabled") else "No",
+                "Class weights": "Si" if training_setup.get("loss", {}).get("use_class_weights") else "No",
+                "Scheduler": training_setup.get("scheduler", {}).get("name", "none"),
+                "Weighted sampler": "Si" if training_setup.get("sampling", {}).get("use_weighted_sampler") else "No",
+                "Random erasing": "Si" if training_setup.get("augmentation", {}).get("random_erasing", {}).get("enabled") else "No",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def metric_value(metrics: dict, *keys: str):
     for key in keys:
         if key in metrics and metrics[key] is not None:
@@ -180,6 +199,10 @@ def render_model_overview(selected_model: dict, models: list[dict]) -> None:
         chart_df = comparison_df[["Modelo", "F1 macro", "Recall macro", "Accuracy"]].set_index("Modelo")
         st.bar_chart(chart_df, use_container_width=True)
 
+    with st.expander("Condiciones del entrenamiento", expanded=False):
+        st.write("Este bloque resume bajo qué configuración se ha entrenado cada modelo.")
+        st.dataframe(training_conditions_dataframe(models), use_container_width=True, hide_index=True)
+
     selected_eval = selected_model["evaluation"]
     if not selected_eval:
         st.info("El modelo seleccionado no tiene evaluación guardada todavía.")
@@ -200,6 +223,12 @@ def render_model_overview(selected_model: dict, models: list[dict]) -> None:
         for metric_name, description in METRIC_HELP.items():
             st.caption(f"{metric_name}: {description}")
 
+    training_setup = selected_eval.get("training_setup", {})
+    if training_setup:
+        with st.expander("Condiciones del entrenamiento del modelo", expanded=False):
+            st.write("Resumen de configuración relevante usada para entrenar este modelo.")
+            st.json(training_setup, expanded=False)
+
     per_class = selected_eval["metrics"].get("per_class", {})
     if per_class:
         with st.expander("Métricas por clase", expanded=False):
@@ -218,6 +247,12 @@ def render_model_overview(selected_model: dict, models: list[dict]) -> None:
             )
             st.dataframe(per_class_df, use_container_width=True, hide_index=True)
             st.bar_chart(per_class_df.set_index("Clase")[["Recall", "F1"]], use_container_width=True)
+
+    confusion_summary = selected_eval.get("confusion_summary", [])
+    if confusion_summary:
+        with st.expander("Resumen de clases confundidas", expanded=False):
+            st.write("Aquí se muestran las confusiones más frecuentes entre clases en el conjunto de test.")
+            st.dataframe(pd.DataFrame(confusion_summary), use_container_width=True, hide_index=True)
 
     curves = selected_eval.get("curve_paths", {})
     with st.expander("Curva ROC", expanded=False):
@@ -270,6 +305,12 @@ def render_model_overview(selected_model: dict, models: list[dict]) -> None:
         with st.expander("Ejemplos de errores del modelo", expanded=False):
             st.write(SECTION_HELP["hard_cases"])
             st.dataframe(pd.DataFrame(hard_cases[:8]), use_container_width=True, hide_index=True)
+
+    source_alerts = selected_eval.get("source_alerts", [])
+    if source_alerts:
+        with st.expander("Alertas de sesgo por fuente", expanded=False):
+            st.write("Estas alertas señalan fuentes con una tasa de error anormalmente alta o baja respecto al resto.")
+            st.dataframe(pd.DataFrame(source_alerts), use_container_width=True, hide_index=True)
 
 
 def render_prediction_area(selected_model: dict) -> None:

@@ -32,8 +32,13 @@ class Predictor:
         payload_config = payload.get("config", {})
         dataset_cfg = payload_config.get("dataset", {})
         preprocessing = payload_config.get("preprocessing", {})
+        augmentation = payload_config.get("augmentation", {})
         effective_image_size = int(dataset_cfg.get("image_size", image_size))
-        _, self.eval_transform = build_transforms(effective_image_size, preprocessing=preprocessing)
+        _, self.eval_transform = build_transforms(
+            effective_image_size,
+            preprocessing=preprocessing,
+            augmentation=augmentation,
+        )
         state_dict = payload["model_state_dict"] if "model_state_dict" in payload else payload
         self.model.load_state_dict(state_dict)
         self.model.to(self.device)

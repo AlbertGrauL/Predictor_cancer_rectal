@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 
 from .config import load_config
 from .utils import load_paths, to_project_relative
@@ -25,11 +26,14 @@ def main() -> None:
         paths.metrics_dir,
         paths.reports_dir,
     ]:
-        for item in directory.glob("*"):
+        for item in directory.iterdir():
             if item.name == ".gitkeep":
                 continue
             if item.is_file():
                 item.unlink()
+                removed.append(to_project_relative(item))
+            elif item.is_dir():
+                shutil.rmtree(item)
                 removed.append(to_project_relative(item))
 
     if removed:

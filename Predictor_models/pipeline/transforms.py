@@ -16,14 +16,16 @@ class BottomLeftMask:
         return masked
 
 
-def build_transforms(image_size: int, preprocessing: dict | None = None):
+def build_transforms(image_size: int, preprocessing: dict | None = None, augmentation: dict | None = None):
     try:
         from torchvision import transforms
     except ImportError as exc:
         raise RuntimeError("torchvision no esta instalado. Ejecuta `uv sync`.") from exc
 
     preprocessing = preprocessing or {}
+    augmentation = augmentation or {}
     mask_cfg = preprocessing.get("bottom_left_mask", {})
+    random_erasing_cfg = augmentation.get("random_erasing", {})
     base_steps = []
     if mask_cfg.get("enabled"):
         base_steps.append(
@@ -47,6 +49,14 @@ def build_transforms(image_size: int, preprocessing: dict | None = None):
             transforms.RandomVerticalFlip(p=0.1),
             transforms.ColorJitter(brightness=0.08, contrast=0.08, saturation=0.05, hue=0.02),
             transforms.ToTensor(),
+            transforms.RandomErasing(
+                p=float(random_erasing_cfg.get("p", 0.25)),
+                scale=tuple(random_erasing_cfg.get("scale", (0.02, 0.10))),
+                ratio=tuple(random_erasing_cfg.get("ratio", (0.3, 3.3))),
+                value=0,
+            )
+            if random_erasing_cfg.get("enabled")
+            else transforms.Lambda(lambda tensor: tensor),
             normalization,
         ]
     )

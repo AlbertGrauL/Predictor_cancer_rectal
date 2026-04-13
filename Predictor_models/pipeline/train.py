@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
-from pathlib import Path
 import random
 
 from .config import load_config
@@ -13,7 +13,7 @@ from .utils import dependency_guard, load_paths, resolve_path, set_seed, to_proj
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Entrena un modelo CNN para clasificacion binaria.")
+    parser = argparse.ArgumentParser(description="Entrena un modelo CNN para clasificacion multiclase.")
     parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
     parser.add_argument("--model", default=None, help="Nombre del modelo a entrenar.")
     parser.add_argument("--manifest", default="Predictor_models/artifacts/manifests/dataset_manifest.csv")
@@ -30,7 +30,7 @@ def sample_rows(rows, limit: int | None, seed: int):
     return sampled[:limit]
 
 
-def evaluate_loader(model, loader, device, threshold: float, positive_index: int):
+def evaluate_loader(model, loader, device, positive_index: int):
     import torch
 
     model.eval()
@@ -55,6 +55,67 @@ def evaluate_loader(model, loader, device, threshold: float, positive_index: int
     return total_loss / max(len(loader.dataset), 1), y_true, y_pred, y_score
 
 
+def build_optimizer(model, optimizer_cfg: dict):
+    import torch
+
+    optimizer_name = str(optimizer_cfg.get("name", "adamw")).lower()
+    learning_rate = float(optimizer_cfg.get("learning_rate", 0.0003))
+    weight_decay = float(optimizer_cfg.get("weight_decay", 0.0001))
+
+    if optimizer_name != "adamw":
+        raise ValueError(f"Optimizador no soportado: {optimizer_name}")
+
+    return torch.optim.AdamW(
+        filter(lambda param: param.requires_grad, model.parameters()),
+        lr=learning_rate,
+        weight_decay=weight_decay,
+    )
+
+
+def build_scheduler(optimizer, scheduler_cfg: dict):
+    import torch
+
+    scheduler_name = str(scheduler_cfg.get("name", "none")).lower()
+    if scheduler_name in {"none", ""}:
+        return None
+    if scheduler_name == "reduce_on_plateau":
+        return torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode=str(scheduler_cfg.get("mode", "max")),
+            factor=float(scheduler_cfg.get("factor", 0.5)),
+            patience=int(scheduler_cfg.get("patience", 2)),
+        )
+    raise ValueError(f"Scheduler no soportado: {scheduler_name}")
+
+
+def compute_class_weights(train_rows, class_to_idx: dict[str, int]):
+    import torch
+
+    counts = Counter(row["class_name"] for row in train_rows)
+    total = sum(counts.values())
+    class_count = len(class_to_idx)
+    weights = []
+    for class_name, _class_index in sorted(class_to_idx.items(), key=lambda item: item[1]):
+        count = counts.get(class_name, 1)
+        weights.append(total / max(count * class_count, 1))
+    return torch.tensor(weights, dtype=torch.float32)
+
+
+def build_sampler(train_rows, enabled: bool):
+    if not enabled:
+        return None
+    import torch
+    from torch.utils.data import WeightedRandomSampler
+
+    counts = Counter(row["class_name"] for row in train_rows)
+    sample_weights = [1.0 / counts[row["class_name"]] for row in train_rows]
+    return WeightedRandomSampler(
+        weights=torch.tensor(sample_weights, dtype=torch.double),
+        num_samples=len(train_rows),
+        replacement=True,
+    )
+
+
 def main() -> None:
     dependency_guard(
         {
@@ -76,14 +137,24 @@ def main() -> None:
     set_seed(config["project"]["random_seed"])
     paths = load_paths(config)
 
+    optimizer_cfg = config.get("optimizer", {})
+    scheduler_cfg = config.get("scheduler", {})
+    loss_cfg = config.get("loss", {})
+    sampling_cfg = config.get("sampling", {})
+    preprocessing = config.get("preprocessing", {})
+    augmentation = config.get("augmentation", {})
+
     model_name = args.model or config["models"]["baseline"]
     manifest_path = resolve_path(args.manifest)
     class_names = list(config["dataset"]["classes"].keys())
     class_to_idx = {name: index for index, name in enumerate(class_names)}
     positive_index = class_to_idx[config["training"]["positive_class_name"]]
     image_size = config["dataset"]["image_size"]
-    preprocessing = config.get("preprocessing", {})
-    train_transform, eval_transform = build_transforms(image_size, preprocessing=preprocessing)
+    train_transform, eval_transform = build_transforms(
+        image_size,
+        preprocessing=preprocessing,
+        augmentation=augmentation,
+    )
 
     train_rows = load_manifest(manifest_path, split="train")
     val_rows = load_manifest(manifest_path, split="val")
@@ -94,10 +165,12 @@ def main() -> None:
     train_dataset = ImageClassificationDataset(train_rows, class_to_idx, transform=train_transform)
     val_dataset = ImageClassificationDataset(val_rows, class_to_idx, transform=eval_transform)
 
+    sampler = build_sampler(train_rows, enabled=bool(sampling_cfg.get("use_weighted_sampler", False)))
     train_loader = DataLoader(
         train_dataset,
         batch_size=config["training"]["batch_size"],
-        shuffle=True,
+        shuffle=sampler is None,
+        sampler=sampler,
         num_workers=config["training"]["num_workers"],
         collate_fn=collate_with_rows,
     )
@@ -114,28 +187,40 @@ def main() -> None:
     model.to(device)
     freeze_backbone(model)
 
-    criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.AdamW(
-        filter(lambda param: param.requires_grad, model.parameters()),
-        lr=config["training"]["learning_rate"],
-        weight_decay=config["training"]["weight_decay"],
-    )
+    class_weights = None
+    if loss_cfg.get("use_class_weights", False):
+        class_weights = compute_class_weights(train_rows, class_to_idx).to(device)
 
-    history: list[dict[str, float | int]] = []
+    loss_name = str(loss_cfg.get("name", "cross_entropy")).lower()
+    if loss_name != "cross_entropy":
+        raise ValueError(f"Loss no soportada: {loss_name}")
+    criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
+
+    optimizer = build_optimizer(model, optimizer_cfg)
+    scheduler = build_scheduler(optimizer, scheduler_cfg)
+
+    history: list[dict[str, float | int | None]] = []
     best_f1 = -1.0
     best_path = paths.checkpoints_dir / f"{model_name}_best.pt"
     patience = 0
-    threshold = config["training"].get("threshold", 0.5)
+
+    training_setup = {
+        "optimizer": optimizer_cfg,
+        "scheduler": scheduler_cfg,
+        "loss": loss_cfg,
+        "sampling": sampling_cfg,
+        "augmentation": augmentation,
+        "preprocessing": preprocessing,
+    }
 
     total_epochs = args.epochs or config["training"]["epochs"]
     for epoch in range(1, total_epochs + 1):
         if epoch == 2:
             unfreeze_all(model)
-            optimizer = torch.optim.AdamW(
-                model.parameters(),
-                lr=config["training"]["learning_rate"] / 10,
-                weight_decay=config["training"]["weight_decay"],
-            )
+            fine_tune_optimizer_cfg = dict(optimizer_cfg)
+            fine_tune_optimizer_cfg["learning_rate"] = float(optimizer_cfg.get("learning_rate", 0.0003)) / 10.0
+            optimizer = build_optimizer(model, fine_tune_optimizer_cfg)
+            scheduler = build_scheduler(optimizer, scheduler_cfg)
 
         model.train()
         running_loss = 0.0
@@ -150,26 +235,28 @@ def main() -> None:
             running_loss += float(loss.item()) * images.size(0)
 
         train_loss = running_loss / max(len(train_loader.dataset), 1)
-        val_loss, y_true, y_pred, y_score = evaluate_loader(model, val_loader, device, threshold, positive_index)
+        val_loss, y_true, y_pred, y_score = evaluate_loader(model, val_loader, device, positive_index)
         metrics = compute_classification_metrics(y_true, y_pred, y_score, class_names, positive_index)
 
         epoch_record = {
             "epoch": epoch,
             "train_loss": train_loss,
             "val_loss": val_loss,
-            "accuracy": metrics["accuracy"],
-            "precision_macro": metrics["precision_macro"],
-            "recall_macro": metrics["recall_macro"],
-            "f1_macro": metrics["f1_macro"],
-            "f1_weighted": metrics["f1_weighted"],
-            "roc_auc": metrics["roc_auc"],
-            "pr_auc": metrics["pr_auc"],
+            "val_accuracy": metrics["accuracy"],
+            "val_precision_macro": metrics["precision_macro"],
+            "val_recall_macro": metrics["recall_macro"],
+            "val_f1_macro": metrics["f1_macro"],
+            "val_f1_weighted": metrics["f1_weighted"],
+            "val_roc_auc": metrics["roc_auc"],
+            "val_pr_auc": metrics["pr_auc"],
         }
         history.append(epoch_record)
         print(json.dumps(epoch_record, ensure_ascii=False))
 
-        score_metric_name = config["training"].get("primary_metric", "macro_f1")
+        score_metric_name = config["training"].get("primary_metric", "f1_macro")
         score_metric_value = metrics.get(score_metric_name) or metrics.get("f1_macro") or metrics.get("f1")
+        if scheduler is not None:
+            scheduler.step(score_metric_value)
 
         if score_metric_value > best_f1:
             best_f1 = score_metric_value
@@ -181,6 +268,7 @@ def main() -> None:
                     "class_names": class_names,
                     "config": config,
                     "primary_metric": score_metric_name,
+                    "training_setup": training_setup,
                 },
                 best_path,
             )
@@ -197,6 +285,7 @@ def main() -> None:
                 "model_name": model_name,
                 "class_names": class_names,
                 "checkpoint_path": to_project_relative(best_path),
+                "training_setup": training_setup,
             },
             indent=2,
             ensure_ascii=False,
