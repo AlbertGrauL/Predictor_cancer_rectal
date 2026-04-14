@@ -9,8 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
-from .config import load_config
-from .utils import load_paths, set_seed, to_project_relative, write_json
+from ..config import load_config
+from ..utils import load_paths, set_seed, to_project_relative, write_json
 
 
 @dataclass(slots=True)
@@ -27,7 +27,7 @@ class ImageInfo:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audita el dataset del proyecto.")
-    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/image/multiclass_baseline.yaml")
     return parser.parse_args()
 
 

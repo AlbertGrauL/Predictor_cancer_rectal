@@ -7,7 +7,7 @@ from typing import Any
 from .gradcam import generate_gradcam
 from .models import build_model
 from .transforms import build_transforms
-from .utils import resolve_path
+from ..utils import resolve_path
 
 
 class Predictor:

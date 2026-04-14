@@ -17,9 +17,9 @@ else:
     ROOT = Path(__file__).resolve().parents[2]
 
 from Predictor_models.pipeline.config import load_config
-from Predictor_models.pipeline.inference import Predictor
-from Predictor_models.pipeline.tabular_inference import TabularPredictor
-from Predictor_models.pipeline.tabular_utils import build_question_specs, load_questions
+from Predictor_models.pipeline.image.inference import Predictor
+from Predictor_models.pipeline.tabular.tabular_inference import TabularPredictor
+from Predictor_models.pipeline.tabular.tabular_utils import build_question_specs, load_questions
 from Predictor_models.pipeline.utils import resolve_path
 
 
@@ -27,8 +27,8 @@ IMAGE_ARTIFACTS_ROOT = ROOT / "Predictor_models" / "artifacts"
 IMAGE_METRICS_DIR = IMAGE_ARTIFACTS_ROOT / "metrics"
 TABULAR_ARTIFACTS_ROOT = ROOT / "Predictor_models" / "artifacts" / "tabular"
 TABULAR_METRICS_DIR = TABULAR_ARTIFACTS_ROOT / "metrics"
-IMAGE_CONFIG_PATH = ROOT / "Predictor_models" / "configs" / "multiclass_baseline.yaml"
-TABULAR_CONFIG_PATH = ROOT / "Predictor_models" / "configs" / "tabular_baseline.yaml"
+IMAGE_CONFIG_PATH = ROOT / "Predictor_models" / "configs" / "image" / "multiclass_baseline.yaml"
+TABULAR_CONFIG_PATH = ROOT / "Predictor_models" / "configs" / "tabular" / "tabular_baseline.yaml"
 IMAGE_CONFIG = load_config(str(IMAGE_CONFIG_PATH))
 TABULAR_CONFIG = load_config(str(TABULAR_CONFIG_PATH))
 DEFAULT_IMAGE_MODEL = "efficientnet_b0"

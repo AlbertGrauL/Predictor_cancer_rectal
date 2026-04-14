@@ -8,14 +8,14 @@ from typing import Any
 
 import pandas as pd
 
-from .config import load_config
-from .metrics import compute_classification_metrics
-from .utils import dependency_guard, load_paths, resolve_path, set_seed, to_project_relative
+from ..config import load_config
+from ..metrics import compute_classification_metrics
+from ..utils import dependency_guard, load_paths, resolve_path, set_seed, to_project_relative
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Entrena un modelo tabular de riesgo clínico.")
-    parser.add_argument("--config", default="Predictor_models/configs/tabular_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/tabular/tabular_baseline.yaml")
     parser.add_argument("--model", default=None)
     parser.add_argument("--manifest", default="Predictor_models/artifacts/tabular/manifests/tabular_manifest.csv")
     parser.add_argument("--max-samples-per-split", type=int, default=None)

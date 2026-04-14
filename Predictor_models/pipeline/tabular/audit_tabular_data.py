@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import argparse
 
-from .config import load_config
+from ..config import load_config
 from .tabular_utils import build_question_specs, build_tabular_audit_report, prepare_tabular_dataframe
-from .utils import load_paths, write_json
+from ..utils import load_paths, write_json
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audita el CSV tabular y el cuestionario de pacientes.")
-    parser.add_argument("--config", default="Predictor_models/configs/tabular_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/tabular/tabular_baseline.yaml")
     return parser.parse_args()
 
 

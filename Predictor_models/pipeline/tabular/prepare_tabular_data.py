@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import argparse
 
-from .config import load_config
+from ..config import load_config
 from .tabular_utils import prepare_tabular_dataframe, split_dataframe
-from .utils import load_paths, write_csv, write_json
+from ..utils import load_paths, write_csv, write_json
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Genera el manifiesto tabular y los splits reproducibles.")
-    parser.add_argument("--config", default="Predictor_models/configs/tabular_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/tabular/tabular_baseline.yaml")
     return parser.parse_args()
 
 

@@ -9,7 +9,7 @@ from .utils import load_paths, to_project_relative
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Limpia artefactos generados del proyecto.")
-    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/image/multiclass_baseline.yaml")
     return parser.parse_args()
 
 

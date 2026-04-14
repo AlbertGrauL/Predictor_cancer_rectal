@@ -8,7 +8,7 @@ from typing import Any
 
 import pandas as pd
 
-from .utils import resolve_path
+from ..utils import resolve_path
 
 
 FAMILY_HISTORY_CATEGORIES = ["no", "colon", "gastric", "other_positive", "unknown_dirty"]

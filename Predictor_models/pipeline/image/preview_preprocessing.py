@@ -3,15 +3,15 @@ from __future__ import annotations
 import argparse
 import random
 
-from .config import load_config
+from ..config import load_config
 from .dataset import load_manifest
 from .transforms import BottomLeftMask, build_transforms
-from .utils import ensure_dir, resolve_path
+from ..utils import ensure_dir, resolve_path
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Genera una vista previa del preprocesado aplicado a una imagen.")
-    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/image/multiclass_baseline.yaml")
     parser.add_argument("--image", required=True, help="Ruta de la imagen de entrada.")
     parser.add_argument("--manifest", default="Predictor_models/artifacts/manifests/dataset_manifest.csv")
     parser.add_argument("--split", default="train")

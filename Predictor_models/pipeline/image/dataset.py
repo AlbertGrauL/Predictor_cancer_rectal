@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 from typing import Callable
 
-from .utils import resolve_path
+from ..utils import resolve_path
 
 
 def load_manifest(path: str | Path, split: str | None = None) -> list[dict[str, str]]:

@@ -6,19 +6,19 @@ import sys
 from pathlib import Path
 
 if __package__ in {None, ""}:
-    ROOT = Path(__file__).resolve().parents[2]
+    ROOT = Path(__file__).resolve().parents[3]
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     from Predictor_models.pipeline.config import load_config
     from Predictor_models.pipeline.utils import resolve_path
 else:
-    from .config import load_config
-    from .utils import resolve_path
+    from ..config import load_config
+    from ..utils import resolve_path
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Ejecuta la comparacion completa de modelos.")
-    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/image/multiclass_baseline.yaml")
     parser.add_argument(
         "--no-clean",
         action="store_true",
@@ -56,13 +56,13 @@ def main() -> None:
 
     if not args.skip_audit:
         run_step(
-            [sys.executable, "-m", "Predictor_models.pipeline.audit_dataset", "--config", args.config],
+            [sys.executable, "-m", "Predictor_models.pipeline.image.audit_dataset", "--config", args.config],
             "1. Auditoria del dataset",
             root,
         )
     if not args.skip_prepare:
         run_step(
-            [sys.executable, "-m", "Predictor_models.pipeline.prepare_data", "--config", args.config],
+            [sys.executable, "-m", "Predictor_models.pipeline.image.prepare_data", "--config", args.config],
             "2. Generacion de manifiesto y splits",
             root,
         )
@@ -70,7 +70,7 @@ def main() -> None:
     for index, model_name in enumerate(models, start=1):
         checkpoint = root / "Predictor_models" / "artifacts" / "checkpoints" / f"{model_name}_best.pt"
         run_step(
-            [sys.executable, "-m", "Predictor_models.pipeline.train", "--config", args.config, "--model", model_name],
+            [sys.executable, "-m", "Predictor_models.pipeline.image.train", "--config", args.config, "--model", model_name],
             f"3.{index} Entrenamiento de {model_name}",
             root,
         )
@@ -78,7 +78,7 @@ def main() -> None:
             [
                 sys.executable,
                 "-m",
-                "Predictor_models.pipeline.evaluate",
+                "Predictor_models.pipeline.image.evaluate",
                 "--config",
                 args.config,
                 "--checkpoint",
@@ -89,7 +89,7 @@ def main() -> None:
         )
 
     run_step(
-        [sys.executable, "-m", "Predictor_models.pipeline.summarize_experiments", "--config", args.config],
+        [sys.executable, "-m", "Predictor_models.pipeline.image.summarize_experiments", "--config", args.config],
         "5. Resumen comparativo de experimentos",
         root,
     )

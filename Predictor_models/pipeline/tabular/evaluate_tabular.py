@@ -6,14 +6,14 @@ import pickle
 
 import pandas as pd
 
-from .config import load_config
-from .metrics import compute_classification_metrics, save_curves
-from .utils import dependency_guard, load_paths, resolve_path, write_json
+from ..config import load_config
+from ..metrics import compute_classification_metrics, save_curves
+from ..utils import dependency_guard, load_paths, resolve_path, write_json
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evalúa un modelo tabular.")
-    parser.add_argument("--config", default="Predictor_models/configs/tabular_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/tabular/tabular_baseline.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--manifest", default="Predictor_models/artifacts/tabular/manifests/tabular_manifest.csv")
     parser.add_argument("--max-samples", type=int, default=None)

@@ -4,13 +4,13 @@ import argparse
 import csv
 import json
 
-from .config import load_config
-from .utils import load_paths
+from ..config import load_config
+from ..utils import load_paths
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Resume experimentos y comparativas de modelos.")
-    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/image/multiclass_baseline.yaml")
     return parser.parse_args()
 
 

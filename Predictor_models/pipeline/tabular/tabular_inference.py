@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .tabular_utils import transform_patient_payload
-from .utils import resolve_path
+from ..utils import resolve_path
 
 
 class TabularPredictor:

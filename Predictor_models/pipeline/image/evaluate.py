@@ -5,17 +5,17 @@ from collections import Counter, defaultdict
 import json
 import random
 
-from .config import load_config
+from ..config import load_config
 from .dataset import ImageClassificationDataset, collate_with_rows, load_manifest
-from .metrics import compute_classification_metrics, save_curves
+from ..metrics import compute_classification_metrics, save_curves
 from .models import build_model
 from .transforms import build_transforms
-from .utils import dependency_guard, load_paths, resolve_path, to_project_relative
+from ..utils import dependency_guard, load_paths, resolve_path, to_project_relative
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evalua un checkpoint entrenado.")
-    parser.add_argument("--config", default="Predictor_models/configs/multiclass_baseline.yaml")
+    parser.add_argument("--config", default="Predictor_models/configs/image/multiclass_baseline.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--manifest", default="Predictor_models/artifacts/manifests/dataset_manifest.csv")
     parser.add_argument("--max-samples", type=int, default=None, help="Limita muestras de test para smoke tests.")

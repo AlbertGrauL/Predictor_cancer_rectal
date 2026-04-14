@@ -26,7 +26,7 @@ En el modo combinado, la imagen decide la clase final y el modelo tabular aporta
 
 ### Imagen
 
-Configuracion principal: [multiclass_baseline.yaml](Predictor_models/configs/multiclass_baseline.yaml)
+Configuracion principal: [multiclass_baseline.yaml](Predictor_models/configs/image/multiclass_baseline.yaml)
 
 Clases actuales:
 
@@ -42,7 +42,7 @@ Modelos activos:
 
 ### Tabular
 
-Configuracion principal: [tabular_baseline.yaml](Predictor_models/configs/tabular_baseline.yaml)
+Configuracion principal: [tabular_baseline.yaml](Predictor_models/configs/tabular/tabular_baseline.yaml)
 
 Objetivo:
 
@@ -68,9 +68,12 @@ Predictor_models/
   app/                    # App Streamlit
   artifacts/              # Artefactos de imagen
   artifacts/tabular/      # Artefactos tabulares
-  configs/                # Configuraciones YAML
+  configs/image/          # Configuracion del flujo CNN
+  configs/tabular/        # Configuracion del flujo tabular
   data/                   # Dataset local
-  pipeline/               # Pipelines de imagen y tabular
+  pipeline/image/         # Pipeline de clasificacion de imagenes
+  pipeline/tabular/       # Pipeline de clasificacion tabular
+  pipeline/               # Modulos compartidos
 docs/
   memoria_tecnica.md      # Documentacion academica
 ```
@@ -106,31 +109,31 @@ En la raiz del proyecto tienes:
 ### 1. Auditoria
 
 ```bash
-uv run python -m Predictor_models.pipeline.audit_dataset --config Predictor_models/configs/multiclass_baseline.yaml
+uv run python -m Predictor_models.pipeline.image.audit_dataset --config Predictor_models/configs/image/multiclass_baseline.yaml
 ```
 
 ### 2. Preparacion de manifiesto y splits
 
 ```bash
-uv run python -m Predictor_models.pipeline.prepare_data --config Predictor_models/configs/multiclass_baseline.yaml
+uv run python -m Predictor_models.pipeline.image.prepare_data --config Predictor_models/configs/image/multiclass_baseline.yaml
 ```
 
 ### 3. Entrenamiento de una CNN
 
 ```bash
-uv run python -m Predictor_models.pipeline.train --config Predictor_models/configs/multiclass_baseline.yaml --model efficientnet_b0
+uv run python -m Predictor_models.pipeline.image.train --config Predictor_models/configs/image/multiclass_baseline.yaml --model efficientnet_b0
 ```
 
 ### 4. Evaluacion
 
 ```bash
-uv run python -m Predictor_models.pipeline.evaluate --config Predictor_models/configs/multiclass_baseline.yaml --checkpoint Predictor_models/artifacts/checkpoints/efficientnet_b0_best.pt
+uv run python -m Predictor_models.pipeline.image.evaluate --config Predictor_models/configs/image/multiclass_baseline.yaml --checkpoint Predictor_models/artifacts/checkpoints/efficientnet_b0_best.pt
 ```
 
 ### 5. Comparacion completa
 
 ```bash
-uv run python -m Predictor_models.pipeline.run_model_comparison
+uv run python -m Predictor_models.pipeline.image.run_model_comparison
 ```
 
 ## Flujo tabular
@@ -138,7 +141,7 @@ uv run python -m Predictor_models.pipeline.run_model_comparison
 ### 1. Auditoria tabular y del formulario
 
 ```bash
-uv run python -m Predictor_models.pipeline.audit_tabular_data --config Predictor_models/configs/tabular_baseline.yaml
+uv run python -m Predictor_models.pipeline.tabular.audit_tabular_data --config Predictor_models/configs/tabular/tabular_baseline.yaml
 ```
 
 Genera:
@@ -149,7 +152,7 @@ Genera:
 ### 2. Preparacion del manifiesto tabular
 
 ```bash
-uv run python -m Predictor_models.pipeline.prepare_tabular_data --config Predictor_models/configs/tabular_baseline.yaml
+uv run python -m Predictor_models.pipeline.tabular.prepare_tabular_data --config Predictor_models/configs/tabular/tabular_baseline.yaml
 ```
 
 Genera:
@@ -160,7 +163,7 @@ Genera:
 ### 3. Entrenamiento de un modelo tabular
 
 ```bash
-uv run python -m Predictor_models.pipeline.train_tabular --config Predictor_models/configs/tabular_baseline.yaml --model xgboost
+uv run python -m Predictor_models.pipeline.tabular.train_tabular --config Predictor_models/configs/tabular/tabular_baseline.yaml --model xgboost
 ```
 
 Que hace ahora este entrenamiento:
@@ -175,7 +178,7 @@ Que hace ahora este entrenamiento:
 ### 4. Evaluacion tabular
 
 ```bash
-uv run python -m Predictor_models.pipeline.evaluate_tabular --config Predictor_models/configs/tabular_baseline.yaml --checkpoint Predictor_models/artifacts/tabular/checkpoints/xgboost_tabular.pkl
+uv run python -m Predictor_models.pipeline.tabular.evaluate_tabular --config Predictor_models/configs/tabular/tabular_baseline.yaml --checkpoint Predictor_models/artifacts/tabular/checkpoints/xgboost_tabular.pkl
 ```
 
 Genera:
@@ -190,7 +193,7 @@ Genera:
 ### 5. Comparacion tabular completa
 
 ```bash
-uv run python -m Predictor_models.pipeline.run_tabular_model_comparison
+uv run python -m Predictor_models.pipeline.tabular.run_tabular_model_comparison
 ```
 
 ## App Streamlit
