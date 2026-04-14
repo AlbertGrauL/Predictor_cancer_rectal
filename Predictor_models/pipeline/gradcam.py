@@ -37,19 +37,20 @@ def generate_gradcam(model, input_tensor):
     gradients = []
 
     def forward_hook(_module, _inputs, output):
-        activations.append(output.detach())
-
-    def backward_hook(_module, _grad_in, grad_out):
-        gradients.append(grad_out[0].detach())
+        if not hasattr(output, "register_hook"):
+            raise RuntimeError("La capa objetivo de Grad-CAM no devolvio un tensor compatible.")
+        cloned_output = output.clone()
+        activations.append(cloned_output.detach())
+        cloned_output.register_hook(lambda grad: gradients.append(grad.detach()))
+        return cloned_output
 
     forward_handle = target_layer.register_forward_hook(forward_hook)
-    backward_handle = target_layer.register_full_backward_hook(backward_hook)
     try:
         model.zero_grad(set_to_none=True)
-        logits = model(input_tensor)
+        logits = model(input_tensor.clone())
         probabilities = torch.softmax(logits, dim=1)
         predicted_index = int(probabilities.argmax(dim=1).item())
-        score = logits[:, predicted_index]
+        score = logits[:, predicted_index].sum()
         score.backward()
 
         activation = activations[-1]
@@ -68,4 +69,3 @@ def generate_gradcam(model, input_tensor):
         )
     finally:
         forward_handle.remove()
-        backward_handle.remove()

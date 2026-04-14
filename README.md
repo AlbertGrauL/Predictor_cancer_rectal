@@ -1,199 +1,244 @@
-# Predictor Multiclase de Polipos y Patologias Relacionadas con Cancer Rectal
+# Predictor Multimodal de Polipos y Patologias Relacionadas con Cancer Rectal
 
-Proyecto academico para clasificacion multiclase de imagenes endoscopicas orientado a la prediccion `polipo / sano / otras_patologias`, centrado en tres CNN recomendadas para este problema.
+Proyecto academico con dos vias de prediccion complementarias:
+
+- `Imagen endoscopica`: clasificacion multiclase `polipo / sano / otras_patologias`
+- `Datos tabulares de paciente`: clasificacion binaria `sin_riesgo_clinico / riesgo_clinico`
+
+La app integra ambas salidas en tres modos:
+
+- `Solo imagen`
+- `Solo datos tabulares`
+- `Combinado`
+
+En el modo combinado, la imagen decide la clase final y el modelo tabular aporta apoyo de riesgo clinico.
 
 ## Objetivos
 
-- Entrenar y comparar varias CNN con transferencia de aprendizaje.
-- Auditar y documentar el dataset de forma reproducible.
-- Evaluar el rendimiento con metricas solidas y analisis de errores.
-- Explicar las predicciones con Grad-CAM.
-- Exponer el modelo en una interfaz simple con Streamlit.
+- Entrenar y comparar tres CNN recomendadas para imagen medica.
+- Entrenar y comparar dos modelos tabulares clasicos: `RandomForest` y `XGBoost`.
+- Auditar y preparar de forma reproducible tanto los datos de imagen como los tabulares.
+- Evaluar los modelos con metricas, curvas, calibracion y analisis de errores.
+- Explicar la salida de imagen mediante `Grad-CAM`.
+- Mostrar todo en una app sencilla de Streamlit orientada a defensa academica.
 
-## Estado del proyecto
+## Modalidades del proyecto
 
-La configuracion activa por defecto esta orientada a un clasificador multiclase:
+### Imagen
 
-- `polipo`: `Predictor_models/data/imagenes_cancer/Polipos/polyps` + dataset consolidado `output/original`
-- `sano`: `Predictor_models/data/imagenes_cancer/Casos_negativos/*`
-- `otras_patologias`: `Predictor_models/data/imagenes_cancer/Sangre_Paredes/*`
+Configuracion principal: [multiclass_baseline.yaml](Predictor_models/configs/multiclass_baseline.yaml)
 
-Configuracion disponible:
+Clases actuales:
 
-- [multiclass_baseline.yaml](Predictor_models/configs/multiclass_baseline.yaml) como configuracion principal del proyecto
+- `polipo`
+- `sano`
+- `otras_patologias`
+
+Modelos activos:
+
+- `resnet50`
+- `efficientnet_b0`
+- `densenet121`
+
+### Tabular
+
+Configuracion principal: [tabular_baseline.yaml](Predictor_models/configs/tabular_baseline.yaml)
+
+Objetivo:
+
+- `cancer_diagnosis`: `no -> 0`, `yes -> 1`
+
+Modelos activos:
+
+- `random_forest`
+- `xgboost`
+
+Mejoras activas en esta iteracion:
+
+- limpieza y normalizacion de variables
+- validacion cruzada estratificada
+- busqueda de hiperparametros con `RandomizedSearchCV`
+- calibracion de probabilidades
+- importancia de variables por atributo y por permutacion
 
 ## Estructura
 
 ```text
 Predictor_models/
-  artifacts/              # Salidas de auditoria, metricas, figuras, pesos y metadatos
-  configs/                # Configuracion YAML del pipeline
-  data/                   # Dataset local (ignorado por Git)
-  pipeline/               # Codigo de auditoria, preparacion, entrenamiento y evaluacion
-Predictor_models/app/
-  app.py                  # Aplicacion Streamlit
-Predictor_api/
-  README.md               # Espacio reservado para una futura API
+  app/                    # App Streamlit
+  artifacts/              # Artefactos de imagen
+  artifacts/tabular/      # Artefactos tabulares
+  configs/                # Configuraciones YAML
+  data/                   # Dataset local
+  pipeline/               # Pipelines de imagen y tabular
 docs/
-  memoria_tecnica.md      # Documentacion academica del proyecto
+  memoria_tecnica.md      # Documentacion academica
 ```
 
-## Requisitos recomendados
+## Requisitos
 
-- Python `3.11` o `3.12`
-- GPU opcional para acelerar entrenamiento
+- Python `3.11` o `3.12` recomendado
+- GPU opcional para entrenamiento de CNN
 
-El entorno actual del repositorio usa Python `3.14.2`, pero algunas dependencias de deep learning pueden no tener soporte estable para esa version. Si `uv sync` falla, la recomendacion es recrear el entorno en Python 3.11 o 3.12.
-
-## Instalacion
+Instalacion:
 
 ```bash
 uv sync
 ```
 
-Si fuera necesario recrear el entorno en una version compatible:
+Si hiciera falta recrear el entorno:
 
 ```bash
 uv venv --python 3.12
 uv sync
 ```
 
-## Flujo de trabajo
+## Lanzadores directos
 
-### Lanzadores directos en Windows
-
-Si quieres ejecutarlo sin escribir toda la secuencia a mano, en la raiz del proyecto tienes:
+En la raiz del proyecto tienes:
 
 - [ejecutar_reentreno_base_multiclase.bat](ejecutar_reentreno_base_multiclase.bat)
 - [ejecutar_reentreno_completo_multiclase.bat](ejecutar_reentreno_completo_multiclase.bat)
+- [ejecutar_comparacion_tabular.bat](ejecutar_comparacion_tabular.bat)
 
-El primero ejecuta:
+## Flujo de imagen
 
-- auditoria
-- preparacion de splits
-- entrenamiento del modelo base
-- evaluacion del modelo base
-
-El segundo ejecuta:
-
-- auditoria
-- preparacion de splits
-- entrenamiento y evaluacion de las tres CNN recomendadas
-- resumen CSV comparativo final
-
-Tambien puedes lanzarlos desde terminal:
-
-```bash
-.\ejecutar_reentreno_base_multiclase.bat
-.\ejecutar_reentreno_completo_multiclase.bat
-```
-
-### 1. Auditar el dataset
+### 1. Auditoria
 
 ```bash
 uv run python -m Predictor_models.pipeline.audit_dataset --config Predictor_models/configs/multiclass_baseline.yaml
 ```
 
-Genera:
-
-- manifiesto del dataset
-- conteos por clase y fuente
-- estadisticas de formatos y resoluciones
-- deteccion basica de duplicados y archivos potencialmente corruptos
-- informe en JSON y Markdown
-
-### 2. Crear splits reproducibles
+### 2. Preparacion de manifiesto y splits
 
 ```bash
 uv run python -m Predictor_models.pipeline.prepare_data --config Predictor_models/configs/multiclass_baseline.yaml
 ```
 
-Genera:
-
-- `dataset_manifest.csv`
-- `splits.json`
-- resumen de balance por split
-
-### 3. Entrenar modelos
-
-Ejemplo con EfficientNet-B0:
+### 3. Entrenamiento de una CNN
 
 ```bash
 uv run python -m Predictor_models.pipeline.train --config Predictor_models/configs/multiclass_baseline.yaml --model efficientnet_b0
 ```
 
-Modelos recomendados y activos en el proyecto:
-
-- `resnet50`
-- `efficientnet_b0`
-- `densenet121`
-
-### 4. Evaluar un checkpoint
+### 4. Evaluacion
 
 ```bash
 uv run python -m Predictor_models.pipeline.evaluate --config Predictor_models/configs/multiclass_baseline.yaml --checkpoint Predictor_models/artifacts/checkpoints/efficientnet_b0_best.pt
 ```
 
+### 5. Comparacion completa
+
+```bash
+uv run python -m Predictor_models.pipeline.run_model_comparison
+```
+
+## Flujo tabular
+
+### 1. Auditoria tabular y del formulario
+
+```bash
+uv run python -m Predictor_models.pipeline.audit_tabular_data --config Predictor_models/configs/tabular_baseline.yaml
+```
+
+Genera:
+
+- `tabular_dataset_audit.json`
+- `tabular_question_specs.json`
+
+### 2. Preparacion del manifiesto tabular
+
+```bash
+uv run python -m Predictor_models.pipeline.prepare_tabular_data --config Predictor_models/configs/tabular_baseline.yaml
+```
+
+Genera:
+
+- `tabular_manifest.csv`
+- `tabular_split_summary.json`
+
+### 3. Entrenamiento de un modelo tabular
+
+```bash
+uv run python -m Predictor_models.pipeline.train_tabular --config Predictor_models/configs/tabular_baseline.yaml --model xgboost
+```
+
+Que hace ahora este entrenamiento:
+
+- selecciona solo variables numericas codificadas
+- ejecuta `RandomizedSearchCV` con validacion cruzada estratificada
+- busca hiperparametros sobre `train`
+- selecciona el mejor estimador por score de CV
+- calibra probabilidades usando `val`
+- guarda checkpoint, metadatos e historial
+
+### 4. Evaluacion tabular
+
+```bash
+uv run python -m Predictor_models.pipeline.evaluate_tabular --config Predictor_models/configs/tabular_baseline.yaml --checkpoint Predictor_models/artifacts/tabular/checkpoints/xgboost_tabular.pkl
+```
+
 Genera:
 
 - metricas globales
+- ROC, PR y calibracion
 - matriz de confusion
-- curvas ROC y PR
-- calibracion
-- analisis por fuente
-- metricas por clase
-- comparativa multiclase
+- alertas por subgrupo
+- importancia de variables
+- importancia por permutacion
 
-### 5. Lanzar la app de Streamlit
+### 5. Comparacion tabular completa
+
+```bash
+uv run python -m Predictor_models.pipeline.run_tabular_model_comparison
+```
+
+## App Streamlit
+
+Lanzamiento:
 
 ```bash
 uv run streamlit run Predictor_models/app/app.py
 ```
 
-## Orquestadores Python
+La app muestra:
 
-Si prefieres ejecutarlo sin los `.bat`, tambien tienes dos orquestadores:
-
-- [run_initial_pipeline.py](Predictor_models/pipeline/run_initial_pipeline.py)
-- [run_model_comparison.py](Predictor_models/pipeline/run_model_comparison.py)
-
-Ejemplos:
-
-```bash
-uv run python -m Predictor_models.pipeline.run_initial_pipeline
-uv run python -m Predictor_models.pipeline.run_initial_pipeline --model resnet50
-uv run python -m Predictor_models.pipeline.run_model_comparison
-uv run python -m Predictor_models.pipeline.run_model_comparison --models resnet50 efficientnet_b0 densenet121
-```
+- comparativa separada de modelos de imagen
+- comparativa separada de modelos tabulares
+- selector independiente de modelo por modalidad
+- prediccion de imagen con `Grad-CAM`
+- prediccion tabular con formulario guiado
+- modo combinado con interpretacion conjunta
 
 ## Metricas principales
 
+### Imagen
+
 - Accuracy
-- Precision macro
 - Recall macro
 - F1 macro
-- F1 weighted
 - ROC-AUC
 - PR-AUC
-- Matriz de confusion
-- Metricas por clase
+- metricas por clase
 
-La seleccion del mejor modelo no debe hacerse solo por accuracy. En esta version multiclase se priorizan especialmente `F1 macro`, `Recall macro` y el comportamiento por clase.
+### Tabular
 
-## Interpretabilidad
-
-La app y el pipeline soportan:
-
-- probabilidad por clase
-- prediccion top-1
-- Grad-CAM sobre la region mas influyente
+- Accuracy
+- Precision positiva
+- Recall positivo
+- F1 positivo
+- ROC-AUC
+- PR-AUC
+- calibracion
+- CV best score
 
 ## Documentacion academica
 
 La memoria tecnica completa esta en [docs/memoria_tecnica.md](docs/memoria_tecnica.md).
 
-## Limitaciones y aviso
+## Limitaciones
 
 - Herramienta academica y de investigacion.
 - No es un sistema de apoyo clinico validado.
-- Las conclusiones deben interpretarse dentro de las limitaciones del dataset y del contexto docente.
+- La salida tabular representa riesgo clinico, no una clase patologica especifica.
+- La salida combinada es reglada e interpretable, no una fusion entrenada.

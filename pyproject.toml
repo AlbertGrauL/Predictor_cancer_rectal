@@ -15,4 +15,5 @@ dependencies = [
     "streamlit>=1.44.0",
     "torch>=2.6.0",
     "torchvision>=0.21.0",
+    "xgboost>=3.0.0",
 ]

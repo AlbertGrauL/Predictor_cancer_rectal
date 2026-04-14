@@ -1,6 +1,15 @@
 from __future__ import annotations
 
 
+def disable_inplace_activations(module) -> None:
+    for child in module.modules():
+        if hasattr(child, "inplace"):
+            try:
+                child.inplace = False
+            except Exception:
+                pass
+
+
 def build_model(model_name: str, num_classes: int, pretrained: bool = True):
     try:
         import torch.nn as nn
@@ -22,6 +31,7 @@ def build_model(model_name: str, num_classes: int, pretrained: bool = True):
             f"Modelo no soportado: {model_name}. "
             "Modelos activos: resnet50, efficientnet_b0, densenet121."
         )
+    disable_inplace_activations(model)
     return model
 
 

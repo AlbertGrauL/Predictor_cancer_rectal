@@ -2,136 +2,268 @@
 
 ## 1. Introduccion
 
-Este proyecto desarrolla un sistema academico de clasificacion multiclase de imagenes endoscopicas orientado a la deteccion de polipos, casos sanos y otras patologias relacionadas con el cancer colorrectal.
+Este proyecto desarrolla un sistema academico multimodal para el estudio de lesiones y patologias relacionadas con cancer colorrectal. El sistema combina dos fuentes de informacion:
 
-## 2. Problema y motivacion
+- imagenes endoscopicas
+- datos tabulares de paciente
 
-Los polipos colorrectales pueden representar lesiones precursoras del cancer colorrectal. En entornos docentes, un sistema de vision por computador permite estudiar:
+La salida por imagen resuelve una clasificacion multiclase y la salida tabular aporta una estimacion binaria de riesgo clinico.
 
-- preparacion y auditoria de datasets medicos
-- transferencia de aprendizaje con CNN
-- evaluacion robusta y analisis de errores
-- interpretabilidad de predicciones
-- despliegue de prototipos accesibles
+## 2. Objetivo del proyecto
 
-## 3. Alcance de la v1
+El objetivo no es construir una herramienta asistencial, sino una plataforma de aprendizaje y experimentacion que permita:
 
-La version actual implementa:
+- preparar datasets heterogeneos
+- entrenar modelos de imagen y tabulares
+- comparar resultados con criterios reproducibles
+- interpretar predicciones
+- presentar los resultados en una interfaz clara
 
-- auditoria automatizada del dataset
-- pipeline reproducible para entrenamiento multiclase
-- comparacion de CNNs modernas
-- evaluacion completa con metricas y graficas
-- Grad-CAM para interpretacion visual
-- app de demostracion con Streamlit
+## 3. Alcance funcional actual
 
-Queda fuera de esta version:
+La version actual incluye:
 
-- validacion clinica formal
-- integracion hospitalaria
-- certificacion o uso asistencial
+- pipeline completo de imagen multiclase
+- pipeline completo tabular binario
+- comparacion separada de modelos de imagen y tabulares
+- evaluacion con curvas, metricas, calibracion y analisis de errores
+- integracion en Streamlit con modo combinado
 
-## 4. Dataset
+No incluye:
 
-### 4.1 Fuentes consideradas
+- validacion clinica externa real
+- alineacion paciente-imagen a nivel hospitalario
+- meta-modelo de fusion entrenado
+- uso asistencial
+
+## 4. Modalidad de imagen
+
+### 4.1 Definicion del problema
+
+La tarea visual es clasificar cada imagen endoscopica en una de estas clases:
+
+- `polipo`
+- `sano`
+- `otras_patologias`
+
+### 4.2 Dataset visual
+
+Fuentes actuales:
 
 - `Casos_negativos/*`
 - `Polipos/polyps`
 - `Polipos/imagenes con polipos destacados/output/original`
 - `Sangre_Paredes/*`
 
-### 4.2 Riesgos del dataset
+### 4.3 Modelos comparados
 
-- desbalance entre clases y subfuentes
-- posible fuga de datos entre colecciones similares
-- heterogeneidad de resoluciones y formatos
-- sesgo de dominio al mezclar datasets de distinto origen
+- `ResNet50`
+- `EfficientNet-B0`
+- `DenseNet121`
 
-### 4.3 Decision metodologica
+### 4.4 Entrenamiento visual
 
-Para la configuracion actual:
+Se utiliza transferencia de aprendizaje con:
 
-- entrenar con tres clases: `polipo`, `sano` y `otras_patologias`
-- mantener un split reproducible y estratificado
-- comparar varias CNN sobre la misma definicion multiclase
+- congelacion inicial del backbone
+- entrenamiento de la cabeza clasificadora
+- fine-tuning posterior
+- augmentacion moderada
+- mascara fija en la esquina inferior izquierda para reducir atajos visuales
 
-## 5. Metodologia de modelado
+### 4.5 Evaluacion visual
 
-### 5.1 Modelos comparados
+La evaluacion de imagen genera:
 
-- `ResNet50`: baseline robusta y facil de justificar academicamente
-- `EfficientNet-B0`: opcion principal por su buena relacion coste-rendimiento
-- `DenseNet121`: alternativa solida en imagen medica
+- accuracy
+- precision y recall macro
+- F1 macro y weighted
+- ROC-AUC y PR-AUC
+- matriz de confusion
+- metricas por clase
+- Grad-CAM en inferencia
 
-Estas tres arquitecturas se han seleccionado para evitar comparaciones innecesarias y concentrar el proyecto en modelos equilibrados, interpretables y razonables para el volumen de datos disponible.
+## 5. Modalidad tabular
 
-### 5.2 Estrategia de entrenamiento
+### 5.1 Definicion del problema
 
-- transferencia de aprendizaje
-- entrenamiento inicial de la cabeza clasificadora
-- fine-tuning parcial o completo segun resultados de validacion
-- augmentaciones moderadas y clinicamente razonables
+La tarea tabular consiste en predecir la variable `cancer_diagnosis` como:
 
-### 5.3 Seleccion del mejor modelo
+- `sin_riesgo_clinico`
+- `riesgo_clinico`
 
-No se selecciona por accuracy aislada. El criterio principal es:
+Esta salida no diferencia entre `polipo` y `otras_patologias`; solo aporta una señal binaria de riesgo.
 
-- recall de `polipo`
+### 5.2 Dataset tabular
+
+Archivo principal:
+
+- `Predictor_models/data/cancer_final.csv`
+
+Formulario base para la app:
+
+- `Predictor_models/data/Preguntas Oncológicas para Pacientes - Preguntas Oncológicas para Pacientes.csv`
+
+### 5.3 Variables usadas
+
+Variables de entrada:
+
+- `age`
+- `sex`
+- `sof`
+- `alcohol`
+- `tobacco`
+- `diabetes`
+- `tenesmus`
+- `previous_rt`
+- `rectorrhagia`
+- `intestinal_habit`
+- `digestive_family_history`
+
+Variables excluidas:
+
+- `id`
+- `cancer_diagnosis` como entrada del formulario
+
+### 5.4 Preparacion de datos tabulares
+
+La preparacion incluye:
+
+- lectura del CSV con separador `;` y encoding `latin1`
+- limpieza de nombres de columnas
+- mapeo del objetivo `yes/no -> 1/0`
+- codificacion binaria de sintomas y antecedentes
+- codificacion numerica de sexo
+- mantenimiento de variables ordinales como enteros
+- agrupacion de `digestive_family_history` en:
+  - `no`
+  - `colon`
+  - `gastric`
+  - `other_positive`
+  - `unknown_dirty`
+- one-hot encoding de los grupos de antecedentes familiares
+- split estratificado `train / val / test`
+
+### 5.5 Modelos tabulares comparados
+
+- `RandomForestClassifier`
+- `XGBClassifier`
+
+## 6. Mejora implementada en esta iteracion tabular
+
+Esta iteracion amplía el pipeline tabular con cuatro mejoras principales.
+
+### 6.1 Validacion cruzada
+
+Se aplica validacion cruzada estratificada sobre el split de entrenamiento para estimar mejor el rendimiento y reducir dependencia de una sola particion.
+
+### 6.2 Busqueda de hiperparametros
+
+Se usa `RandomizedSearchCV` para explorar configuraciones razonables en:
+
+- `RandomForest`
+  - `n_estimators`
+  - `max_depth`
+  - `min_samples_split`
+  - `min_samples_leaf`
+- `XGBoost`
+  - `n_estimators`
+  - `max_depth`
+  - `learning_rate`
+  - `subsample`
+  - `colsample_bytree`
+  - `reg_lambda`
+  - `scale_pos_weight`
+
+### 6.3 Calibracion de probabilidades
+
+Tras elegir el mejor modelo por validacion cruzada, se calibra su salida usando el split de validacion. Esto mejora la interpretacion del riesgo clinico y hace mas fiable la probabilidad mostrada en la app.
+
+### 6.4 Importancia de variables mas robusta
+
+La evaluacion tabular ahora guarda:
+
+- importancia nativa del modelo
+- importancia por permutacion
+
+La importancia por permutacion es especialmente util porque mide cuanto empeora el modelo si se desordena cada variable.
+
+## 7. Evaluacion
+
+### 7.1 Imagen
+
+Metricas principales:
+
+- accuracy
+- recall macro
 - F1 macro
 - ROC-AUC
 - PR-AUC
-- estabilidad entre corridas
-- coherencia visual de Grad-CAM
+- analisis por clase
 
-## 6. Evaluacion
+### 7.2 Tabular
 
-### 6.1 Metricas cuantitativas
+Metricas principales:
 
 - accuracy
-- precision
-- recall
-- F1-score
+- precision positiva
+- recall positivo
+- F1 positivo
 - ROC-AUC
 - PR-AUC
-- matriz de confusion
-- metricas por clase
+- calibracion
+- CV best score
 
-### 6.2 Evaluacion cualitativa
+### 7.3 Reportes y artefactos
 
-- revision de falsos positivos
-- revision de falsos negativos
-- analisis por fuente del dataset
-- estudio visual de mapas Grad-CAM
+El proyecto guarda metadatos y evaluaciones para ambas modalidades. En tabular se almacenan ademas:
 
-## 7. Interpretabilidad
+- mejores parametros
+- score CV
+- resumen de las mejores configuraciones probadas
+- importancia por permutacion
 
-Se utiliza `Grad-CAM` para mostrar que regiones de la imagen influyen mas en la prediccion. Esto mejora la comprension del comportamiento del modelo y facilita la discusion de casos acertados y erroneos.
+## 8. Integracion multimodal en la app
 
-## 8. Interfaz Streamlit
+La app tiene tres modos:
 
-La aplicacion incluye:
+- `Solo imagen`
+- `Solo datos tabulares`
+- `Combinado`
 
-- carga de imagen
-- prediccion multiclase
-- probabilidad estimada
-- visualizacion Grad-CAM
-- breve explicacion en lenguaje natural
-- panel de metricas y comparacion entre modelos multiclase
+### 8.1 Regla de integracion
+
+La fusion en esta fase no es aprendida. Se basa en una regla explicable:
+
+- la imagen decide la clase final
+- el tabular aporta apoyo o alerta de riesgo
+
+### 8.2 Interpretacion combinada
+
+Casos principales:
+
+- imagen `sano` + riesgo tabular alto -> alerta de revision
+- imagen `polipo` + riesgo tabular alto -> concordancia alta
+- imagen `otras_patologias` + riesgo tabular alto -> concordancia alta
+- imagen patologica + riesgo tabular bajo -> no se rebaja la clase, pero se marca baja concordancia
 
 ## 9. Limitaciones
 
-- dataset no clinicamente curado para uso asistencial
-- resultados dependientes de la calidad y distribucion de las fuentes
-- posible falta de generalizacion a otros hospitales o dispositivos
-- interpretabilidad visual util, pero no equivalente a causalidad
+- la modalidad tabular no distingue tipo de patologia
+- la fusion multimodal aun no usa relacion paciente-imagen real
+- la calidad del objetivo tabular limita el techo del modelo
+- los resultados siguen dependiendo del contexto del dataset y de la definicion de etiquetas
 
 ## 10. Trabajo futuro
 
-- incorporar validacion cruzada mas amplia
-- evaluar arquitecturas adicionales
-- integrar segmentacion y clasificacion conjunta
-- estudiar calibracion avanzada y umbrales clinicamente orientados
+Posibles lineas siguientes:
+
+- añadir `CatBoost` o `LightGBM`
+- probar fusion entrenada cuando exista correspondencia paciente-imagen fiable
+- refinar las categorias de antecedentes familiares
+- estudiar umbrales optimizados para sensibilidad clinica
+- ampliar la validacion externa
 
 ## 11. Aviso final
 
-Este sistema debe entenderse como una herramienta academica de aprendizaje y experimentacion. No sustituye el juicio medico ni debe emplearse para toma de decisiones clinicas reales.
+Este sistema es academico y de investigacion. No sustituye valoracion medica ni debe utilizarse para decisiones clinicas reales.

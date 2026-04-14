@@ -283,6 +283,7 @@ def main() -> None:
         json.dumps(
             {
                 "model_name": model_name,
+                "modality": "image",
                 "class_names": class_names,
                 "checkpoint_path": to_project_relative(best_path),
                 "training_setup": training_setup,

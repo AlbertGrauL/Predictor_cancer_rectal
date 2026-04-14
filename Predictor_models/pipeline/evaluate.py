@@ -239,6 +239,7 @@ def main() -> None:
 
     report = {
         "model_name": model_name,
+        "modality": "image",
         "checkpoint": to_project_relative(args.checkpoint),
         "class_names": class_names,
         "metrics": metrics,

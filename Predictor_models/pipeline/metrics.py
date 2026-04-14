@@ -103,6 +103,8 @@ def save_curves(y_true, y_score, figures_dir: Path, prefix: str, class_names: li
 
     labels = list(range(len(class_names)))
     y_true_bin = label_binarize(y_true, classes=labels)
+    if len(class_names) == 2 and y_true_bin.ndim == 2 and y_true_bin.shape[1] == 1:
+        y_true_bin = np.column_stack([1 - y_true_bin[:, 0], y_true_bin[:, 0]])
     outputs: dict[str, str] = {}
 
     roc_path = figures_dir / f"{prefix}_roc_curve.png"
