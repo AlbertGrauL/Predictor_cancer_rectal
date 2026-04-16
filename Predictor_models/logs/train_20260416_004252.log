@@ -1,0 +1,123 @@
+2026-04-16 00:42:52,350 - full_pipeline - INFO - INICIANDO ORQUESTADOR GLOBAL DE MODELOS CLINICOS
+2026-04-16 00:42:53,124 - full_pipeline - INFO - ========== Entrenando Especialista para: POLIPOS ==========
+2026-04-16 00:42:53,398 - full_pipeline - INFO - Dataset polipos: 4362 entrenamiento, 545 validación
+2026-04-16 00:44:23,493 - trainer - INFO - Epoch 1/50 | Train Loss: 0.2430, AUC: 0.9808, Sens: 0.9044 | Val Loss: 0.0387, AUC: 0.9998, Sens: 0.9699
+2026-04-16 00:44:23,682 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:45:50,846 - trainer - INFO - Epoch 2/50 | Train Loss: 0.0548, AUC: 0.9975, Sens: 0.9785 | Val Loss: 0.0234, AUC: 0.9993, Sens: 0.9940
+2026-04-16 00:45:51,033 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:47:18,450 - trainer - INFO - Epoch 3/50 | Train Loss: 0.0350, AUC: 0.9991, Sens: 0.9785 | Val Loss: 0.0162, AUC: 0.9999, Sens: 0.9819
+2026-04-16 00:47:18,637 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:48:46,141 - trainer - INFO - Epoch 4/50 | Train Loss: 0.0258, AUC: 0.9993, Sens: 0.9882 | Val Loss: 0.0148, AUC: 0.9993, Sens: 0.9940
+2026-04-16 00:48:46,507 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:50:13,636 - trainer - INFO - Epoch 5/50 | Train Loss: 0.0232, AUC: 0.9995, Sens: 0.9896 | Val Loss: 0.0143, AUC: 0.9999, Sens: 0.9819
+2026-04-16 00:50:13,819 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:51:40,755 - trainer - INFO - Epoch 6/50 | Train Loss: 0.0201, AUC: 0.9997, Sens: 0.9917 | Val Loss: 0.0071, AUC: 1.0000, Sens: 0.9940
+2026-04-16 00:51:40,933 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:53:08,030 - trainer - INFO - Epoch 7/50 | Train Loss: 0.0115, AUC: 0.9999, Sens: 0.9965 | Val Loss: 0.0067, AUC: 1.0000, Sens: 0.9940
+2026-04-16 00:53:08,216 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 00:54:35,194 - trainer - INFO - Epoch 8/50 | Train Loss: 0.0140, AUC: 0.9999, Sens: 0.9910 | Val Loss: 0.0134, AUC: 0.9996, Sens: 0.9940
+2026-04-16 00:56:02,271 - trainer - INFO - Epoch 9/50 | Train Loss: 0.0107, AUC: 0.9999, Sens: 0.9958 | Val Loss: 0.0110, AUC: 0.9998, Sens: 0.9940
+2026-04-16 00:57:29,373 - trainer - INFO - Epoch 10/50 | Train Loss: 0.0164, AUC: 0.9997, Sens: 0.9917 | Val Loss: 0.0155, AUC: 0.9994, Sens: 0.9940
+2026-04-16 00:58:56,614 - trainer - INFO - Epoch 11/50 | Train Loss: 0.0118, AUC: 0.9999, Sens: 0.9945 | Val Loss: 0.0169, AUC: 0.9994, Sens: 0.9880
+2026-04-16 01:00:23,681 - trainer - INFO - Epoch 12/50 | Train Loss: 0.0114, AUC: 0.9998, Sens: 0.9958 | Val Loss: 0.0098, AUC: 1.0000, Sens: 0.9880
+2026-04-16 01:01:50,818 - trainer - INFO - Epoch 13/50 | Train Loss: 0.0044, AUC: 1.0000, Sens: 0.9979 | Val Loss: 0.0050, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:01:51,007 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 01:03:18,006 - trainer - INFO - Epoch 14/50 | Train Loss: 0.0067, AUC: 1.0000, Sens: 0.9979 | Val Loss: 0.0046, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:03:18,201 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 01:04:45,321 - trainer - INFO - Epoch 15/50 | Train Loss: 0.0069, AUC: 1.0000, Sens: 0.9972 | Val Loss: 0.0070, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:06:12,751 - trainer - INFO - Epoch 16/50 | Train Loss: 0.0026, AUC: 1.0000, Sens: 1.0000 | Val Loss: 0.0103, AUC: 0.9999, Sens: 0.9940
+2026-04-16 01:07:39,896 - trainer - INFO - Epoch 17/50 | Train Loss: 0.0047, AUC: 1.0000, Sens: 0.9993 | Val Loss: 0.0151, AUC: 0.9998, Sens: 0.9940
+2026-04-16 01:09:07,082 - trainer - INFO - Epoch 18/50 | Train Loss: 0.0049, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0052, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:10:34,345 - trainer - INFO - Epoch 19/50 | Train Loss: 0.0030, AUC: 1.0000, Sens: 0.9979 | Val Loss: 0.0042, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:10:34,532 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 01:12:01,445 - trainer - INFO - Epoch 20/50 | Train Loss: 0.0072, AUC: 0.9998, Sens: 0.9972 | Val Loss: 0.0089, AUC: 0.9999, Sens: 0.9940
+2026-04-16 01:13:28,708 - trainer - INFO - Epoch 21/50 | Train Loss: 0.0015, AUC: 1.0000, Sens: 1.0000 | Val Loss: 0.0054, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:14:55,846 - trainer - INFO - Epoch 22/50 | Train Loss: 0.0047, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0145, AUC: 1.0000, Sens: 0.9819
+2026-04-16 01:16:23,040 - trainer - INFO - Epoch 23/50 | Train Loss: 0.0025, AUC: 1.0000, Sens: 0.9993 | Val Loss: 0.0069, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:17:50,276 - trainer - INFO - Epoch 24/50 | Train Loss: 0.0042, AUC: 1.0000, Sens: 0.9972 | Val Loss: 0.0128, AUC: 0.9999, Sens: 0.9940
+2026-04-16 01:19:17,509 - trainer - INFO - Epoch 25/50 | Train Loss: 0.0030, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0099, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:20:44,837 - trainer - INFO - Epoch 26/50 | Train Loss: 0.0023, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0008, AUC: 1.0000, Sens: 1.0000
+2026-04-16 01:20:45,024 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-16 01:22:12,526 - trainer - INFO - Epoch 27/50 | Train Loss: 0.0031, AUC: 1.0000, Sens: 0.9993 | Val Loss: 0.0079, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:23:39,521 - trainer - INFO - Epoch 28/50 | Train Loss: 0.0016, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0042, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:25:06,607 - trainer - INFO - Epoch 29/50 | Train Loss: 0.0015, AUC: 1.0000, Sens: 0.9993 | Val Loss: 0.0045, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:26:33,751 - trainer - INFO - Epoch 30/50 | Train Loss: 0.0014, AUC: 1.0000, Sens: 1.0000 | Val Loss: 0.0142, AUC: 0.9998, Sens: 0.9940
+2026-04-16 01:28:01,110 - trainer - INFO - Epoch 31/50 | Train Loss: 0.0011, AUC: 1.0000, Sens: 0.9993 | Val Loss: 0.0130, AUC: 1.0000, Sens: 0.9940
+2026-04-16 01:29:28,073 - trainer - INFO - Epoch 32/50 | Train Loss: 0.0028, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0142, AUC: 0.9998, Sens: 0.9940
+2026-04-16 01:30:55,213 - trainer - INFO - Epoch 33/50 | Train Loss: 0.0011, AUC: 1.0000, Sens: 0.9993 | Val Loss: 0.0165, AUC: 0.9997, Sens: 0.9940
+2026-04-16 01:30:55,213 - trainer - INFO - Early stopping activado.
+2026-04-16 01:30:55,226 - full_pipeline - INFO - ========== OK: Entrenamiento de polipos finalizado ==========
+2026-04-16 01:30:55,434 - full_pipeline - INFO - VRAM Limpiada tras procesar polipos.
+2026-04-16 01:30:55,434 - full_pipeline - INFO - ========== Entrenando Especialista para: SANGRE ==========
+2026-04-16 01:30:55,683 - full_pipeline - INFO - Dataset sangre: 4362 entrenamiento, 545 validación
+2026-04-16 01:32:23,025 - trainer - INFO - Epoch 1/50 | Train Loss: 0.2877, AUC: 0.9362, Sens: 0.7785 | Val Loss: 0.1380, AUC: 0.9869, Sens: 0.9412
+2026-04-16 01:32:23,215 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/sangre_best.pth
+2026-04-16 01:33:49,979 - trainer - INFO - Epoch 2/50 | Train Loss: 0.1202, AUC: 0.9858, Sens: 0.9028 | Val Loss: 0.1097, AUC: 0.9887, Sens: 0.9412
+2026-04-16 01:33:50,168 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/sangre_best.pth
+2026-04-16 01:35:16,621 - trainer - INFO - Epoch 3/50 | Train Loss: 0.0879, AUC: 0.9927, Sens: 0.9067 | Val Loss: 0.0996, AUC: 0.9884, Sens: 0.9529
+2026-04-16 01:35:16,798 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/sangre_best.pth
+2026-04-16 01:36:42,990 - trainer - INFO - Epoch 4/50 | Train Loss: 0.0787, AUC: 0.9939, Sens: 0.9249 | Val Loss: 0.0846, AUC: 0.9901, Sens: 0.9529
+2026-04-16 01:36:43,169 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/sangre_best.pth
+2026-04-16 01:38:07,706 - trainer - INFO - Epoch 5/50 | Train Loss: 0.0712, AUC: 0.9948, Sens: 0.9262 | Val Loss: 0.0753, AUC: 0.9897, Sens: 0.9412
+2026-04-16 01:38:07,890 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/sangre_best.pth
+2026-04-16 01:39:33,822 - trainer - INFO - Epoch 6/50 | Train Loss: 0.0649, AUC: 0.9957, Sens: 0.9417 | Val Loss: 0.0879, AUC: 0.9878, Sens: 0.8706
+2026-04-16 01:40:59,677 - trainer - INFO - Epoch 7/50 | Train Loss: 0.0493, AUC: 0.9974, Sens: 0.9598 | Val Loss: 0.1204, AUC: 0.9890, Sens: 0.9765
+2026-04-16 01:42:25,976 - trainer - INFO - Epoch 8/50 | Train Loss: 0.0468, AUC: 0.9978, Sens: 0.9637 | Val Loss: 0.0927, AUC: 0.9883, Sens: 0.8824
+2026-04-16 01:43:52,397 - trainer - INFO - Epoch 9/50 | Train Loss: 0.0477, AUC: 0.9974, Sens: 0.9547 | Val Loss: 0.1008, AUC: 0.9857, Sens: 0.9059
+2026-04-16 01:45:19,149 - trainer - INFO - Epoch 10/50 | Train Loss: 0.0404, AUC: 0.9982, Sens: 0.9534 | Val Loss: 0.1043, AUC: 0.9902, Sens: 0.9412
+2026-04-16 01:46:45,711 - trainer - INFO - Epoch 11/50 | Train Loss: 0.0373, AUC: 0.9987, Sens: 0.9624 | Val Loss: 0.1261, AUC: 0.9840, Sens: 0.9647
+2026-04-16 01:48:12,169 - trainer - INFO - Epoch 12/50 | Train Loss: 0.0404, AUC: 0.9982, Sens: 0.9573 | Val Loss: 0.1361, AUC: 0.9921, Sens: 0.9647
+2026-04-16 01:48:12,169 - trainer - INFO - Early stopping activado.
+2026-04-16 01:48:12,180 - full_pipeline - INFO - ========== OK: Entrenamiento de sangre finalizado ==========
+2026-04-16 01:48:12,385 - full_pipeline - INFO - VRAM Limpiada tras procesar sangre.
+2026-04-16 01:48:12,386 - full_pipeline - INFO - ========== Entrenando Especialista para: INFLAMACION ==========
+2026-04-16 01:48:12,634 - full_pipeline - INFO - Dataset inflamacion: 4362 entrenamiento, 545 validación
+2026-04-16 01:49:40,069 - trainer - INFO - Epoch 1/50 | Train Loss: 0.2462, AUC: 0.9195, Sens: 0.6691 | Val Loss: 0.1168, AUC: 0.9828, Sens: 0.6829
+2026-04-16 01:49:40,258 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/inflamacion_best.pth
+2026-04-16 01:51:07,438 - trainer - INFO - Epoch 2/50 | Train Loss: 0.1075, AUC: 0.9818, Sens: 0.7424 | Val Loss: 0.0995, AUC: 0.9850, Sens: 0.7317
+2026-04-16 01:51:07,616 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/inflamacion_best.pth
+2026-04-16 01:52:34,521 - trainer - INFO - Epoch 3/50 | Train Loss: 0.0785, AUC: 0.9906, Sens: 0.8193 | Val Loss: 0.0862, AUC: 0.9906, Sens: 0.7805
+2026-04-16 01:52:34,707 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/inflamacion_best.pth
+2026-04-16 01:54:01,222 - trainer - INFO - Epoch 4/50 | Train Loss: 0.0665, AUC: 0.9938, Sens: 0.8497 | Val Loss: 0.0867, AUC: 0.9894, Sens: 0.8293
+2026-04-16 01:55:27,847 - trainer - INFO - Epoch 5/50 | Train Loss: 0.0525, AUC: 0.9964, Sens: 0.8873 | Val Loss: 0.0934, AUC: 0.9931, Sens: 0.7195
+2026-04-16 01:56:54,223 - trainer - INFO - Epoch 6/50 | Train Loss: 0.0489, AUC: 0.9965, Sens: 0.9123 | Val Loss: 0.0849, AUC: 0.9876, Sens: 0.8780
+2026-04-16 01:56:54,402 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/inflamacion_best.pth
+2026-04-16 01:58:20,330 - trainer - INFO - Epoch 7/50 | Train Loss: 0.0479, AUC: 0.9968, Sens: 0.9195 | Val Loss: 0.0924, AUC: 0.9879, Sens: 0.9268
+2026-04-16 01:59:46,191 - trainer - INFO - Epoch 8/50 | Train Loss: 0.0399, AUC: 0.9979, Sens: 0.9338 | Val Loss: 0.0752, AUC: 0.9923, Sens: 0.9268
+2026-04-16 01:59:46,387 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/inflamacion_best.pth
+2026-04-16 02:01:12,318 - trainer - INFO - Epoch 9/50 | Train Loss: 0.0331, AUC: 0.9983, Sens: 0.9410 | Val Loss: 0.0727, AUC: 0.9930, Sens: 0.8537
+2026-04-16 02:01:12,508 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/inflamacion_best.pth
+2026-04-16 02:02:38,853 - trainer - INFO - Epoch 10/50 | Train Loss: 0.0244, AUC: 0.9994, Sens: 0.9642 | Val Loss: 0.0926, AUC: 0.9905, Sens: 0.8415
+2026-04-16 02:04:05,020 - trainer - INFO - Epoch 11/50 | Train Loss: 0.0241, AUC: 0.9993, Sens: 0.9660 | Val Loss: 0.0951, AUC: 0.9859, Sens: 0.8659
+2026-04-16 02:05:31,189 - trainer - INFO - Epoch 12/50 | Train Loss: 0.0254, AUC: 0.9986, Sens: 0.9642 | Val Loss: 0.1015, AUC: 0.9868, Sens: 0.8902
+2026-04-16 02:06:57,410 - trainer - INFO - Epoch 13/50 | Train Loss: 0.0240, AUC: 0.9993, Sens: 0.9589 | Val Loss: 0.1009, AUC: 0.9837, Sens: 0.8659
+2026-04-16 02:08:24,052 - trainer - INFO - Epoch 14/50 | Train Loss: 0.0183, AUC: 0.9996, Sens: 0.9732 | Val Loss: 0.0819, AUC: 0.9938, Sens: 0.9390
+2026-04-16 02:09:50,700 - trainer - INFO - Epoch 15/50 | Train Loss: 0.0210, AUC: 0.9993, Sens: 0.9660 | Val Loss: 0.1016, AUC: 0.9839, Sens: 0.8902
+2026-04-16 02:11:17,228 - trainer - INFO - Epoch 16/50 | Train Loss: 0.0146, AUC: 0.9997, Sens: 0.9803 | Val Loss: 0.1065, AUC: 0.9863, Sens: 0.9024
+2026-04-16 02:11:17,229 - trainer - INFO - Early stopping activado.
+2026-04-16 02:11:17,239 - full_pipeline - INFO - ========== OK: Entrenamiento de inflamacion finalizado ==========
+2026-04-16 02:11:17,440 - full_pipeline - INFO - VRAM Limpiada tras procesar inflamacion.
+2026-04-16 02:11:17,441 - full_pipeline - INFO - ========== Entrenando Especialista para: NEGATIVOS ==========
+2026-04-16 02:11:17,781 - full_pipeline - INFO - Dataset negativos: 5962 entrenamiento, 745 validación
+2026-04-16 02:13:17,922 - trainer - INFO - Epoch 1/50 | Train Loss: 0.4726, AUC: 0.7835, Sens: 0.5025 | Val Loss: 0.4434, AUC: 0.7851, Sens: 0.7225
+2026-04-16 02:13:18,114 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/negativos_best.pth
+2026-04-16 02:15:18,506 - trainer - INFO - Epoch 2/50 | Train Loss: 0.4128, AUC: 0.8111, Sens: 0.6298 | Val Loss: 0.4399, AUC: 0.7597, Sens: 0.6507
+2026-04-16 02:15:18,686 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/negativos_best.pth
+2026-04-16 02:17:19,619 - trainer - INFO - Epoch 3/50 | Train Loss: 0.3988, AUC: 0.8129, Sens: 0.6547 | Val Loss: 0.4253, AUC: 0.7490, Sens: 0.4450
+2026-04-16 02:17:19,794 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/negativos_best.pth
+2026-04-16 02:19:20,413 - trainer - INFO - Epoch 4/50 | Train Loss: 0.3888, AUC: 0.8172, Sens: 0.6199 | Val Loss: 0.4247, AUC: 0.7398, Sens: 0.3254
+2026-04-16 02:19:20,593 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/negativos_best.pth
+2026-04-16 02:21:21,150 - trainer - INFO - Epoch 5/50 | Train Loss: 0.3853, AUC: 0.8126, Sens: 0.5894 | Val Loss: 0.4243, AUC: 0.7397, Sens: 0.3732
+2026-04-16 02:21:21,335 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/negativos_best.pth
+2026-04-16 02:23:21,803 - trainer - INFO - Epoch 6/50 | Train Loss: 0.3825, AUC: 0.8232, Sens: 0.5571 | Val Loss: 0.4224, AUC: 0.7177, Sens: 0.6029
+2026-04-16 02:23:21,979 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/negativos_best.pth
+2026-04-16 02:25:22,687 - trainer - INFO - Epoch 7/50 | Train Loss: 0.3814, AUC: 0.8240, Sens: 0.6242 | Val Loss: 0.4261, AUC: 0.7275, Sens: 0.7177
+2026-04-16 02:27:23,407 - trainer - INFO - Epoch 8/50 | Train Loss: 0.3779, AUC: 0.8253, Sens: 0.6913 | Val Loss: 0.4614, AUC: 0.7102, Sens: 0.2632
+2026-04-16 02:29:24,027 - trainer - INFO - Epoch 9/50 | Train Loss: 0.3794, AUC: 0.8255, Sens: 0.5689 | Val Loss: 0.4240, AUC: 0.6975, Sens: 0.5167
+2026-04-16 02:31:24,518 - trainer - INFO - Epoch 10/50 | Train Loss: 0.3791, AUC: 0.8300, Sens: 0.6286 | Val Loss: 0.4287, AUC: 0.7197, Sens: 0.4833
+2026-04-16 02:33:25,379 - trainer - INFO - Epoch 11/50 | Train Loss: 0.3759, AUC: 0.8262, Sens: 0.6161 | Val Loss: 0.4445, AUC: 0.6795, Sens: 0.1914
+2026-04-16 02:35:25,870 - trainer - INFO - Epoch 12/50 | Train Loss: 0.3734, AUC: 0.8362, Sens: 0.6236 | Val Loss: 0.4512, AUC: 0.7054, Sens: 0.1866
+2026-04-16 02:37:26,465 - trainer - INFO - Epoch 13/50 | Train Loss: 0.3741, AUC: 0.8283, Sens: 0.6596 | Val Loss: 0.4420, AUC: 0.7012, Sens: 0.0670
+2026-04-16 02:37:26,466 - trainer - INFO - Early stopping activado.
+2026-04-16 02:37:26,477 - full_pipeline - INFO - ========== OK: Entrenamiento de negativos finalizado ==========
+2026-04-16 02:37:26,684 - full_pipeline - INFO - VRAM Limpiada tras procesar negativos.

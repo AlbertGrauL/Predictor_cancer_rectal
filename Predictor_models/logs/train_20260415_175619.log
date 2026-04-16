@@ -1,0 +1,3 @@
+2026-04-15 17:56:19,448 - run_pipeline - INFO - --- Iniciando Pipeline para MODELO DE PÓLIPOS ---
+2026-04-15 17:56:19,635 - run_pipeline - INFO - Dataset cargado: 4362 entrenamiento, 545 validación
+2026-04-15 17:56:19,761 - run_pipeline - INFO - Entrenando en dispositivo: cpu

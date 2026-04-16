@@ -1,0 +1,3 @@
+2026-04-15 23:19:49,758 - full_pipeline - INFO - INICIANDO ORQUESTADOR GLOBAL DE MODELOS CLINICOS
+2026-04-15 23:19:51,112 - full_pipeline - INFO - ========== Entrenando Especialista para: POLIPOS ==========
+2026-04-15 23:19:51,896 - full_pipeline - INFO - Dataset polipos: 4362 entrenamiento, 545 validación

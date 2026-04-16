@@ -1,0 +1,9 @@
+2026-04-13 17:07:18,898 - run_pipeline - INFO - --- Iniciando Pipeline para MODELO DE PÓLIPOS ---
+2026-04-13 17:07:19,567 - run_pipeline - INFO - Dataset cargado: 4362 entrenamiento, 545 validación
+2026-04-13 17:07:24,138 - run_pipeline - INFO - Entrenando en dispositivo: cpu
+2026-04-13 17:13:00,964 - trainer - INFO - Epoch 1/50 | Train Loss: 0.2507, AUC: 0.9763, Sens: 0.8935 | Val Loss: 0.0463, AUC: 0.9995, Sens: 0.9713
+2026-04-13 17:13:01,102 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-13 17:20:05,177 - trainer - INFO - Epoch 2/50 | Train Loss: 0.0523, AUC: 0.9984, Sens: 0.9742 | Val Loss: 0.0319, AUC: 0.9993, Sens: 0.9885
+2026-04-13 17:20:05,319 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-13 17:26:31,661 - trainer - INFO - Epoch 3/50 | Train Loss: 0.0352, AUC: 0.9992, Sens: 0.9805 | Val Loss: 0.0143, AUC: 0.9998, Sens: 0.9943
+2026-04-13 17:26:31,810 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
