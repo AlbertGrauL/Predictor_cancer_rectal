@@ -1,0 +1,33 @@
+2026-04-15 17:59:28,011 - run_pipeline - INFO - --- Iniciando Pipeline para MODELO DE PÓLIPOS ---
+2026-04-15 17:59:28,343 - run_pipeline - INFO - Dataset cargado: 4362 entrenamiento, 545 validación
+2026-04-15 17:59:28,782 - run_pipeline - INFO - Entrenando en dispositivo: cuda
+2026-04-15 18:01:27,374 - trainer - INFO - Epoch 1/50 | Train Loss: 0.2574, AUC: 0.9728, Sens: 0.9051 | Val Loss: 0.0468, AUC: 0.9972, Sens: 0.9734
+2026-04-15 18:01:27,630 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:03:18,659 - trainer - INFO - Epoch 2/50 | Train Loss: 0.0559, AUC: 0.9972, Sens: 0.9712 | Val Loss: 0.0244, AUC: 0.9987, Sens: 0.9894
+2026-04-15 18:03:18,873 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:05:16,803 - trainer - INFO - Epoch 3/50 | Train Loss: 0.0332, AUC: 0.9990, Sens: 0.9845 | Val Loss: 0.0208, AUC: 0.9981, Sens: 0.9894
+2026-04-15 18:05:17,026 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:07:20,790 - trainer - INFO - Epoch 4/50 | Train Loss: 0.0263, AUC: 0.9995, Sens: 0.9838 | Val Loss: 0.0175, AUC: 0.9997, Sens: 0.9894
+2026-04-15 18:07:21,115 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:09:32,128 - trainer - INFO - Epoch 5/50 | Train Loss: 0.0277, AUC: 0.9993, Sens: 0.9852 | Val Loss: 0.0207, AUC: 0.9987, Sens: 0.9894
+2026-04-15 18:11:28,537 - trainer - INFO - Epoch 6/50 | Train Loss: 0.0176, AUC: 0.9998, Sens: 0.9909 | Val Loss: 0.0131, AUC: 0.9993, Sens: 0.9947
+2026-04-15 18:11:28,761 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:13:19,287 - trainer - INFO - Epoch 7/50 | Train Loss: 0.0116, AUC: 0.9999, Sens: 0.9965 | Val Loss: 0.0152, AUC: 0.9987, Sens: 0.9947
+2026-04-15 18:15:10,689 - trainer - INFO - Epoch 8/50 | Train Loss: 0.0126, AUC: 0.9999, Sens: 0.9937 | Val Loss: 0.0093, AUC: 0.9998, Sens: 0.9947
+2026-04-15 18:15:10,909 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:17:26,910 - trainer - INFO - Epoch 9/50 | Train Loss: 0.0087, AUC: 0.9999, Sens: 0.9958 | Val Loss: 0.0136, AUC: 0.9990, Sens: 0.9947
+2026-04-15 18:19:39,792 - trainer - INFO - Epoch 10/50 | Train Loss: 0.0084, AUC: 0.9999, Sens: 0.9979 | Val Loss: 0.0178, AUC: 0.9992, Sens: 0.9894
+2026-04-15 18:21:30,800 - trainer - INFO - Epoch 11/50 | Train Loss: 0.0119, AUC: 0.9999, Sens: 0.9923 | Val Loss: 0.0138, AUC: 0.9998, Sens: 0.9894
+2026-04-15 18:23:18,893 - trainer - INFO - Epoch 12/50 | Train Loss: 0.0046, AUC: 1.0000, Sens: 0.9979 | Val Loss: 0.0148, AUC: 0.9996, Sens: 0.9894
+2026-04-15 18:25:09,385 - trainer - INFO - Epoch 13/50 | Train Loss: 0.0040, AUC: 1.0000, Sens: 0.9972 | Val Loss: 0.0136, AUC: 0.9999, Sens: 0.9894
+2026-04-15 18:26:59,593 - trainer - INFO - Epoch 14/50 | Train Loss: 0.0095, AUC: 0.9999, Sens: 0.9944 | Val Loss: 0.0063, AUC: 1.0000, Sens: 0.9947
+2026-04-15 18:26:59,951 - trainer - INFO - --> Modelo guardado en C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models/polipos_best.pth
+2026-04-15 18:28:50,276 - trainer - INFO - Epoch 15/50 | Train Loss: 0.0097, AUC: 0.9998, Sens: 0.9958 | Val Loss: 0.0114, AUC: 0.9999, Sens: 0.9947
+2026-04-15 18:30:38,016 - trainer - INFO - Epoch 16/50 | Train Loss: 0.0062, AUC: 1.0000, Sens: 0.9958 | Val Loss: 0.0236, AUC: 0.9994, Sens: 0.9894
+2026-04-15 18:32:26,494 - trainer - INFO - Epoch 17/50 | Train Loss: 0.0062, AUC: 0.9999, Sens: 0.9972 | Val Loss: 0.0183, AUC: 0.9997, Sens: 0.9894
+2026-04-15 18:34:13,954 - trainer - INFO - Epoch 18/50 | Train Loss: 0.0037, AUC: 1.0000, Sens: 0.9979 | Val Loss: 0.0175, AUC: 0.9987, Sens: 0.9947
+2026-04-15 18:35:59,548 - trainer - INFO - Epoch 19/50 | Train Loss: 0.0026, AUC: 1.0000, Sens: 1.0000 | Val Loss: 0.0123, AUC: 0.9996, Sens: 0.9947
+2026-04-15 18:37:45,360 - trainer - INFO - Epoch 20/50 | Train Loss: 0.0033, AUC: 1.0000, Sens: 0.9979 | Val Loss: 0.0152, AUC: 0.9996, Sens: 0.9894
+2026-04-15 18:39:31,505 - trainer - INFO - Epoch 21/50 | Train Loss: 0.0021, AUC: 1.0000, Sens: 0.9986 | Val Loss: 0.0121, AUC: 0.9999, Sens: 0.9947
+2026-04-15 18:39:31,505 - trainer - INFO - Early stopping activado.
+2026-04-15 18:39:31,505 - run_pipeline - INFO - --- Pipeline finalizado con éxito ---
