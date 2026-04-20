@@ -12,17 +12,18 @@
 <div class="lg:col-span-2 space-y-8">
 <!-- Upload Area -->
 <div class="bg-surface-container-lowest p-10 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)] group transition-all">
-<div class="border-2 border-dashed border-outline-variant/30 rounded-2xl bg-surface-container-low hover:bg-primary-fixed transition-colors duration-300 flex flex-col items-center justify-center py-20 px-6 cursor-pointer">
+<label class="border-2 border-dashed border-outline-variant/30 rounded-2xl bg-surface-container-low hover:bg-primary-fixed transition-colors duration-300 flex flex-col items-center justify-center py-20 px-6 cursor-pointer">
+<input type="file" accept=".jpg,.jpeg,.png" class="hidden" (change)="onFileSelected($event)"/>
 <div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-6 text-primary-container">
 <span class="material-symbols-outlined text-4xl" data-icon="cloud_upload">cloud_upload</span>
 </div>
 <h3 class="font-headline text-xl font-semibold mb-2">Arrastre y suelte la imagen aquí</h3>
-<p class="text-on-surface-variant mb-8 text-center max-w-xs">Formatos admitidos: JPG, PNG, DICOM. Tamaño máximo de archivo 5MB.</p>
-<button class="px-8 py-3 bg-primary-container text-on-primary rounded-xl font-semibold hover:shadow-lg transition-all flex items-center gap-2">
+<p class="text-on-surface-variant mb-8 text-center max-w-xs">Formatos admitidos: JPG, PNG. Tamaño máximo de archivo 5MB.</p>
+<span class="px-8 py-3 bg-primary-container text-on-primary rounded-xl font-semibold hover:shadow-lg transition-all flex items-center gap-2">
 <span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
-                        Buscar Archivos
-                    </button>
-</div>
+                        {{ selectedFile ? selectedFile.name : 'Buscar Archivos' }}
+                    </span>
+</label>
 </div>
 <!-- Clinical Questionnaire -->
 <div class="bg-surface-container-lowest p-8 md:p-10 rounded-[2rem] shadow-[0_12px_32px_rgba(25,28,30,0.06)]">
@@ -161,9 +162,10 @@
 </div>
 </section>
 <div class="pt-6">
-<button class="w-full py-4 bg-primary text-on-primary rounded-2xl font-bold hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
-<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
-                            Enviar para Análisis de IA
+<p *ngIf="errorMessage" class="mb-4 text-center text-sm text-error font-medium">{{ errorMessage }}</p>
+<button class="w-full py-4 bg-primary text-on-primary rounded-2xl font-bold hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-60" type="submit" [disabled]="isLoading">
+<span class="material-symbols-outlined" data-icon="analytics">{{ isLoading ? 'hourglass_empty' : 'analytics' }}</span>
+                            {{ isLoading ? 'Procesando...' : 'Enviar para Análisis de IA' }}
                         </button>
 <p class="mt-4 text-center text-xs text-on-surface-variant">Al enviar, acepta que esta es una herramienta de evaluación preliminar y no un diagnóstico definitivo.</p>
 </div>
