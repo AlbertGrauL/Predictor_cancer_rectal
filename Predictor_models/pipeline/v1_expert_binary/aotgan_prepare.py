@@ -5,9 +5,9 @@ import shutil
 from pathlib import Path
 from tqdm import tqdm
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data" / "imagenes_cancer"
-AOT_TRAIN_DIR = BASE_DIR / "data" / "aotgan_train"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
+AOT_TRAIN_DIR = DATA_DIR.parent / "aotgan_train"
 
 CLEAN_IMG_DIR = AOT_TRAIN_DIR / "images" / "colon_clean"
 MASKS_DIR = AOT_TRAIN_DIR / "masks" / "pconv"
@@ -18,7 +18,7 @@ def init_dirs():
 
 def gather_clean_images():
     """Recoge las imágenes set1 y set2 que ya sabemos que no tienen texto."""
-    polipos_out_dir = DATA_DIR / "Polipos" / "imagenes con polipos destacados" / "output" / "original"
+    polipos_out_dir = DATA_DIR / "Polipos" / "imagenes con polipos destacados" / "original"
     print("Recopilando imágenes limpias conocidas de set1 y set2...")
     count = 0
     if polipos_out_dir.exists():

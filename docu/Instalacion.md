@@ -16,16 +16,34 @@ conda activate inpainting
 pip install torch torchvision torchaudio mlflow scikit-learn tqdm opencv-python pillow
 ```
 
-### 2. Configuración de Rutas
-Antes de entrenar, verifica que las rutas a las imágenes en `Predictor_models/pipeline/config.py` sean correctas para tu máquina local.
+---
 
-### 3. Entrenamiento de los Modelos
+## Lanzador Maestro (Recomendado)
+
+Para facilitar el uso, he creado un archivo **`LAUNCHER.bat`** en la raíz del proyecto. Solo tienes que hacer doble clic para acceder a un menú interactivo que te permite:
+1. Entrenar los modelos especialistas (v1).
+2. Abrir el dashboard de MLflow.
+3. Arrancar la API y el Frontend simultáneamente.
+
+### 2. Configuración de Rutas
+Antes de entrenar, verifica que las rutas a las imágenes en `Predictor_models/pipeline/v1_expert_binary/config.py` sean correctas para tu máquina local.
+
+### 3. Entrenamiento de los Modelos (v1)
 Para entrenar las 4 redes neuronales de forma secuencial y automática, utiliza el orquestador global. Este script gestiona la limpieza de memoria VRAM entre modelos para evitar errores de memoria.
 
 ```bash
 # Ejecutar desde la raíz del proyecto
-python -m Predictor_models.pipeline.run_full_pipeline
+python -m Predictor_models.pipeline.v1_expert_binary.run_full_pipeline
 ```
+
+---
+
+## 🏛️ Organización del Proyecto Modelos
+
+El repositorio ahora cuenta con dos arquitecturas de entrenamiento:
+
+1.  **v1_expert_binary (Main)**: Ensamble de 4 especialistas independientes (Pólipos, Sangre, Inflamación, Negativos). [Ver Documentación v1](./DOC_SISTEMA_V1.md).
+2.  **v2_multiclass (Test/Víctor)**: Arquitectura unificada multiclase y soporte para datos tabulares.
 
 ---
 
@@ -51,7 +69,7 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 ---
 
-## Estructura del Pipeline (`Predictor_models/pipeline/`)
+## Estructura del Pipeline v1 (`Predictor_models/pipeline/v1_expert_binary/`)
 - `config.py`: Configuración centralizada.
 - `dataset.py`: Cargador de datos (One-vs-Rest).
 - `models.py`: Arquitecturas (EfficientNet-B0).
@@ -64,9 +82,9 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 ## Herramientas de Preprocesamiento (AOT-GAN)
 Si deseas realizar la eliminación de texto (Inpainting) antes del entrenamiento:
-1. Prepara el dataset limpio: `python -m Predictor_models.pipeline.aotgan_prepare`
-2. Genera las máscaras de texto: `python -m Predictor_models.pipeline.preprocess_masks`
-3. Aplica la limpieza (requiere modelo AOT-GAN entrenado): `python -m Predictor_models.pipeline.preprocess_inpaint`
+1. Prepara el dataset limpio: `python -m Predictor_models.pipeline.v1_expert_binary.aotgan_prepare`
+2. Genera las máquinas de texto: `python -m Predictor_models.pipeline.v1_expert_binary.preprocess_masks`
+3. Aplica la limpieza: `python -m Predictor_models.pipeline.v1_expert_binary.preprocess_inpaint`
 
 ---
 

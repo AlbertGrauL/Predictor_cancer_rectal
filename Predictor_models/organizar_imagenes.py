@@ -22,7 +22,6 @@ Fuentes y convención de nombres resultante
 Requisitos: Python 3.6+  (solo stdlib, sin dependencias externas)
 """
 
-import os
 import shutil
 from pathlib import Path
 
@@ -37,8 +36,8 @@ SRC_MASKS      = BASE / "masks"
 SRC_IMAGES2    = BASE / "images_2"
 SRC_MASKS2     = BASE / "masks_2"
 
-OUT_ORIGINAL = BASE / "output" / "original"
-OUT_MASKS    = BASE / "output" / "masks"
+OUT_ORIGINAL = BASE / "original"
+OUT_MASKS    = BASE / "masks"
 
 
 def ensure_dirs():

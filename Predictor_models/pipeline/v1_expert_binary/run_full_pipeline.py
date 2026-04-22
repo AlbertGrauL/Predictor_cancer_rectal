@@ -3,12 +3,13 @@ import torch
 import torch.nn as nn
 import mlflow
 from torch.utils.data import DataLoader, random_split
-from Predictor_models.pipeline.config import BATCH_SIZE, LEARNING_RATE, EPOCHS, EARLY_STOPPING_PATIENCE, DEVICE
-from Predictor_models.pipeline.dataset import EndoDataset
-from Predictor_models.pipeline.transforms import get_transforms
-from Predictor_models.pipeline.models import get_model
-from Predictor_models.pipeline.train import train_model
-from Predictor_models.pipeline.utils import get_logger
+from Predictor_models.pipeline.v1_expert_binary.config import BATCH_SIZE, LEARNING_RATE, EPOCHS, EARLY_STOPPING_PATIENCE, DEVICE
+from Predictor_models.pipeline.v1_expert_binary.dataset import EndoDataset
+from Predictor_models.pipeline.v1_expert_binary.transforms import get_transforms
+from Predictor_models.pipeline.v1_expert_binary.models import get_model
+from Predictor_models.pipeline.v1_expert_binary.train import train_model
+from Predictor_models.pipeline.v1_expert_binary.evaluate import evaluate_model
+from Predictor_models.pipeline.v1_expert_binary.utils import get_logger
 
 logger = get_logger("full_pipeline")
 
@@ -57,7 +58,21 @@ def train_single_category(target_category):
         patience=EARLY_STOPPING_PATIENCE, 
         model_name=target_category
     )
-    logger.info(f"========== OK: Entrenamiento de {target_category} finalizado ==========")
+    
+    # --- EVALUACIÓN POST-ENTRENAMIENTO (Test Split) ---
+    logger.info(f"Evaluando {target_category} en el conjunto de test...")
+    test_loader = DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False)
+    
+    # Abrimos el run de MLflow manualmente para loguear el artefacto de evaluación
+    with mlflow.start_run(run_name=f"eval_{target_category}", nested=True):
+        results = evaluate_model(target_category, target_category, loader=test_loader)
+        if results and 'confusion_matrix_path' in results:
+            mlflow.log_artifact(results['confusion_matrix_path'], artifact_path="evaluation_plots")
+            
+    logger.info(f"========== OK: Entrenamiento y Evaluación de {target_category} finalizados ==========")
+    
+    # Limpieza explícita
+    del model, train_loader, val_loader, test_loader
 
 def main():
     logger.info("INICIANDO ORQUESTADOR GLOBAL DE MODELOS CLINICOS")
