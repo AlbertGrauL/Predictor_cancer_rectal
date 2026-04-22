@@ -58,6 +58,20 @@ export class UploadComponent {
     const formData = new FormData();
     formData.append('image', this.selectedFile);
 
+    const v = this.uploadForm.value;
+    formData.append('sex',                  v.sex               ?? 'male');
+    formData.append('tobacco',              v.tobacco           ?? 'never');
+    formData.append('alcohol',              v.alcohol           ?? 'none');
+    formData.append('radiotherapy',         v.radiotherapy      ?? 'no');
+    formData.append('diabetes',             v.diabetes          ?? 'no');
+    formData.append('formalCancer',         v.formalCancer      ?? 'no');
+    formData.append('familyHistory',        v.familyHistory     ?? 'no');
+    formData.append('familyHistoryDetails', v.familyHistoryDetails ?? '');
+    formData.append('bloodInStool',         v.bloodInStool      ?? 'no');
+    formData.append('rectorrhagia',         v.rectorrhagia      ?? 'no');
+    formData.append('intestinalHabits',     v.intestinalHabits  ?? 'normal');
+    formData.append('tenesmus',             v.tenesmus          ?? 'no');
+
     const reader = new FileReader();
     reader.onload = () => {
       const imageDataUrl = reader.result as string;

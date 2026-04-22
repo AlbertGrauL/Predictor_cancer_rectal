@@ -4,7 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { PredictionResult } from '../prediction.service';
 
 interface CategoryEntry {
-  key: keyof PredictionResult;
+  key: string;
   label: string;
   prob: number;
 }
@@ -22,11 +22,11 @@ export class ResultsComponent {
   topCategory: CategoryEntry | null = null;
   imageDataUrl: string | null = null;
 
-  private labelMap: Record<keyof PredictionResult, string> = {
+  private labelMap: Record<string, string> = {
     polipos: 'Pólipos',
     sangre: 'Sangre',
     inflamacion: 'Inflamación',
-    negativos: 'Negativo'
+    negativos: 'Negativo',
   };
 
   constructor(private router: Router) {
@@ -41,11 +41,63 @@ export class ResultsComponent {
 
     this.result = result;
     this.imageDataUrl = state?.['imageDataUrl'] ?? null;
-    this.categories = (Object.keys(result) as (keyof PredictionResult)[]).map(k => ({
+
+    const scores = result.image_scores ?? {
+      polipos: result.polipos,
+      sangre: result.sangre,
+      inflamacion: result.inflamacion,
+      negativos: result.negativos,
+    };
+
+    this.categories = (Object.keys(scores) as string[]).map(k => ({
       key: k,
-      label: this.labelMap[k],
-      prob: result[k]
+      label: this.labelMap[k] ?? k,
+      prob: (scores as any)[k] as number,
     }));
     this.topCategory = this.categories.reduce((a, b) => b.prob > a.prob ? b : a);
+  }
+
+  get clinicalLevel(): string {
+    const level = this.result?.clinical_risk?.level ?? 'bajo';
+    const map: Record<string, string> = {
+      bajo: 'Bajo', moderado: 'Moderado', alto: 'Alto', muy_alto: 'Muy alto'
+    };
+    return map[level] ?? level;
+  }
+
+  get clinicalLevelClass(): string {
+    const level = this.result?.clinical_risk?.level ?? 'bajo';
+    return {
+      bajo: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+      moderado: 'text-amber-700 bg-amber-50 border-amber-200',
+      alto: 'text-orange-700 bg-orange-50 border-orange-200',
+      muy_alto: 'text-red-700 bg-red-50 border-red-200',
+    }[level] ?? '';
+  }
+
+  get fusionLevel(): string {
+    const level = this.result?.fusion?.level ?? 'bajo';
+    const map: Record<string, string> = {
+      bajo: 'Bajo', moderado: 'Moderado', alto: 'Alto', muy_alto: 'Muy alto'
+    };
+    return map[level] ?? level;
+  }
+
+  get fusionLevelClass(): string {
+    const level = this.result?.fusion?.level ?? 'bajo';
+    return {
+      bajo: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+      moderado: 'text-amber-700 bg-amber-50 border-amber-200',
+      alto: 'text-orange-700 bg-orange-50 border-orange-200',
+      muy_alto: 'text-red-700 bg-red-50 border-red-200',
+    }[level] ?? '';
+  }
+
+  get fusionBarWidth(): string {
+    return ((this.result?.fusion?.score ?? 0) * 100) + '%';
+  }
+
+  get clinicalBarWidth(): string {
+    return ((this.result?.clinical_risk?.score ?? 0) * 100) + '%';
   }
 }
