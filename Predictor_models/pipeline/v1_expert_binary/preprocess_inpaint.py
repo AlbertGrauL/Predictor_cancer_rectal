@@ -91,6 +91,6 @@ def process_inpainting(weights_path):
         postprocess(comp_imgs[0]).save(out_path)
 
 if __name__ == "__main__":
-    # La ruta al checkpoint que se generará tras el fine-tuning
-    custom_weights = r"C:\Users\alber\AOT-GAN-for-Inpainting\experiments\colon_inpaint\latest_G.pth"
+    # La ruta al checkpoint que se generó tras el fine-tuning
+    custom_weights = r"C:\Users\alber\AOT-GAN-for-Inpainting\experiments\G0000000.pt"
     process_inpainting(custom_weights)

@@ -1,0 +1,87 @@
+project:
+  name: predictor_cancer_rectal_multiclase
+  random_seed: 42
+
+paths:
+  dataset_root: Predictor_models/data/imagenes_cancer
+  artifacts_root: Predictor_models/artifacts
+  manifests_dir: Predictor_models/artifacts/manifests
+  reports_dir: Predictor_models/artifacts/reports
+  figures_dir: Predictor_models/artifacts/figures
+  checkpoints_dir: Predictor_models/artifacts/checkpoints
+  metrics_dir: Predictor_models/artifacts/metrics
+
+dataset:
+  mode: multiclass
+  image_size: 224
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  extensions:
+    - .jpg
+    - .jpeg
+    - .png
+  classes:
+    polipo:
+      - Polipos/polyps
+      - Polipos/imagenes con polipos destacados/output/original
+    sano:
+      - Casos_negativos
+    otras_patologias:
+      - Sangre_Paredes
+  external_eval_sources: {}
+
+preprocessing:
+  bottom_left_mask:
+    enabled: true
+    width_ratio: 0.30
+    height_ratio: 0.35
+    fill: 0
+
+training:
+  batch_size: 16
+  epochs: 20
+  num_workers: 0
+  early_stopping_patience: 5
+  mixed_precision: false
+  positive_class_name: polipo
+  primary_metric: f1_macro
+
+optimizer:
+  name: adamw
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+
+scheduler:
+  name: reduce_on_plateau
+  mode: max
+  factor: 0.5
+  patience: 2
+
+loss:
+  name: cross_entropy
+  use_class_weights: true
+
+sampling:
+  use_weighted_sampler: false
+
+augmentation:
+  random_erasing:
+    enabled: true
+    p: 0.25
+    scale:
+      - 0.02
+      - 0.10
+    ratio:
+      - 0.3
+      - 3.3
+
+models:
+  baseline: efficientnet_b0
+  candidates:
+    - resnet50
+    - efficientnet_b0
+    - densenet121
+
+logging:
+  experiment_name: baseline_multiclase

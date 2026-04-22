@@ -5,7 +5,7 @@ Este repositorio contiene un sistema modular basado en PyTorch para el entrenami
 ## Puesta en Marcha
 
 ### 1. Requisitos e Instalación
-
+x1
 Se recomienda usar un entorno de **Conda** para gestionar las dependencias y el soporte de GPU (NVIDIA).
 
 ```bash
@@ -93,3 +93,36 @@ imagenes_cancer/
 | **Sangre / Inflamación** | `Sangre_Paredes/` | (En proceso) |
 | **Sin Clasificar** | `imagenes sin clasificar/` | ~61,957 |
 | **TOTAL** | | **~71,159** |
+
+---
+
+## Ejecución de la Aplicación (API y Frontend)
+
+Para poner en marcha la aplicación completa (Back-end y Front-end), sigue estos pasos:
+
+### 1. Iniciar el Back-end (API)
+
+El servidor de API usa FastAPI. Para iniciarlo, ejecuta el siguiente comando desde la raíz del proyecto:
+
+```bash
+# Con uv (recomendado)
+uv run uvicorn Predictor_api.main:app --reload
+
+# O directamente con uvicorn si tienes el entorno activado
+uvicorn Predictor_api.main:app --reload
+```
+
+La API estará disponible en: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+### 2. Iniciar el Front-end (Angular)
+
+El front-end está desarrollado en Angular. Navega a la carpeta correspondiente e inicia el servidor:
+
+```bash
+cd Predictor_front
+npm install  # Solo la primera vez
+npm start
+```
+
+La aplicación web estará disponible en: [http://localhost:4200](http://localhost:4200)
+
