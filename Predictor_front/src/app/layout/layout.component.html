@@ -1,0 +1,49 @@
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-sm dark:shadow-none glass-nav">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+<div class="text-2xl font-bold tracking-tighter text-blue-900 dark:text-blue-100 font-headline cursor-pointer" routerLink="/">ColoGuard AI</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" routerLink="/" routerLinkActive="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-600 pb-1" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" routerLink="/how-it-works" routerLinkActive="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-600 pb-1">Cómo Funciona</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" routerLink="/upload" routerLinkActive="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-600 pb-1">Cargar Imágenes</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" routerLink="/results" routerLinkActive="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-600 pb-1">Resultados</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors font-inter" routerLink="/faq" routerLinkActive="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-600 pb-1">FAQ</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2.5 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-semibold text-sm hover:opacity-90 transition-all active:scale-95" routerLink="/upload">
+                Iniciar Análisis
+            </button>
+<button class="hidden md:block text-slate-500 font-medium hover:text-primary transition-colors" routerLink="/faq">Contacto</button>
+</div>
+</div>
+</nav>
+
+<div class="min-h-screen">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full border-t border-slate-100 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto px-8 py-12">
+<div class="space-y-4">
+<div class="font-manrope font-bold text-lg text-slate-900 dark:text-slate-100">ColoGuard Medical Systems</div>
+<p class="font-inter text-sm text-slate-500 dark:text-slate-400 max-w-xs">
+                Avanzando en la detección temprana mediante tecnología empática y precisión clínica.
+            </p>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-2">Legal y Ética</h4>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" routerLink="/faq">Política de Privacidad</a>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" routerLink="/faq">Términos de Servicio</a>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" routerLink="/faq">Aviso Médico</a>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-2">Soporte</h4>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" routerLink="/faq">Contactar Soporte</a>
+<a class="font-inter text-sm text-slate-500 hover:text-blue-500 transition-colors" routerLink="/how-it-works">Documentación</a>
+<div class="pt-4">
+<p class="font-inter text-xs text-slate-400">© 2024 ColoGuard Medical Systems. Solo para evaluación preliminar.</p>
+</div>
+</div>
+</div>
+</footer>
