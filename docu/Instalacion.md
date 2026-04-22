@@ -5,7 +5,7 @@ Este repositorio contiene un sistema modular basado en PyTorch para el entrenami
 ## Puesta en Marcha
 
 ### 1. Requisitos e Instalación
-x1
+
 Se recomienda usar un entorno de **Conda** para gestionar las dependencias y el soporte de GPU (NVIDIA).
 
 ```bash
@@ -15,6 +15,15 @@ conda activate inpainting
 # Instala las dependencias necesarias
 pip install torch torchvision torchaudio mlflow scikit-learn tqdm opencv-python pillow
 ```
+
+---
+
+## Lanzador Maestro (Recomendado)
+
+Para facilitar el uso, he creado un archivo **`LAUNCHER.bat`** en la raíz del proyecto. Solo tienes que hacer doble clic para acceder a un menú interactivo que te permite:
+1. Entrenar los modelos especialistas (v1).
+2. Abrir el dashboard de MLflow.
+3. Arrancar la API y el Frontend simultáneamente.
 
 ### 2. Configuración de Rutas
 Antes de entrenar, verifica que las rutas a las imágenes en `Predictor_models/pipeline/v1_expert_binary/config.py` sean correctas para tu máquina local.

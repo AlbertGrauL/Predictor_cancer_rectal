@@ -63,7 +63,7 @@ def process_all_images():
     
     valid_count = 0
     for img_path in tqdm(all_images):
-        if "aotgan_train" in img_path or "text_masks" in img_path or "_cleaned" in img_path or "output/original" in img_path:
+        if "aotgan_train" in img_path or "text_masks" in img_path or "_cleaned" in img_path or "Polipos/imagenes con polipos destacados/original" in img_path:
             continue # Evitar procesar lo ya limpio
             
         rel_path = Path(img_path).relative_to(DATA_DIR)

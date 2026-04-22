@@ -18,7 +18,7 @@ def init_dirs():
 
 def gather_clean_images():
     """Recoge las imágenes set1 y set2 que ya sabemos que no tienen texto."""
-    polipos_out_dir = DATA_DIR / "Polipos" / "imagenes con polipos destacados" / "output" / "original"
+    polipos_out_dir = DATA_DIR / "Polipos" / "imagenes con polipos destacados" / "original"
     print("Recopilando imágenes limpias conocidas de set1 y set2...")
     count = 0
     if polipos_out_dir.exists():

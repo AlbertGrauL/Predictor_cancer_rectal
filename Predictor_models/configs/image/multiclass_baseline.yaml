@@ -24,7 +24,7 @@ dataset:
   classes:
     polipo:
       - Polipos/polyps
-      - Polipos/imagenes con polipos destacados/output/original
+      - Polipos/imagenes con polipos destacados/original
     sano:
       - Casos_negativos
     otras_patologias:

@@ -3,21 +3,20 @@ from torch.utils.data import DataLoader
 from .dataset import EndoDataset
 from .transforms import get_transforms
 from .models import get_model
-from .metrics import calculate_metrics
+from .metrics import calculate_metrics, plot_confusion_matrix
 from .utils import get_logger, load_checkpoint
-from .config import DEVICE, MODELS_DIR, BATCH_SIZE
+from .config import DEVICE, MODELS_DIR, BATCH_SIZE, FIGURES_DIR
 
 logger = get_logger("evaluate")
 
-def evaluate_model(model_name, target_category):
+def evaluate_model(model_name, target_category, loader=None):
     logger.info(f"--- Evaluando Modelo: {model_name} para {target_category} ---")
     
-    # 1. Preparar Datos de Test
-    test_transform = get_transforms(train=False)
-    # Aquí podríamos filtrar el dataset original para quedarnos con el split de test
-    # Para el MVP, cargamos el dataset completo y lo evaluamos (idealmente usar el test_split guardado)
-    dataset = EndoDataset(target_category=target_category, transform=test_transform)
-    loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False)
+    # 1. Preparar Datos de Test (si no se proporciona loader)
+    if loader is None:
+        test_transform = get_transforms(train=False)
+        dataset = EndoDataset(target_category=target_category, transform=test_transform)
+        loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False)
     
     # 2. Cargar Modelo
     model = get_model("efficientnet_b0").to(DEVICE)
@@ -43,7 +42,14 @@ def evaluate_model(model_name, target_category):
             all_outputs.append(torch.sigmoid(outputs).detach())
             
     # 4. Métricas Finales
-    results = calculate_metrics(torch.cat(all_targets), torch.cat(all_outputs))
+    targets_cat = torch.cat(all_targets)
+    outputs_cat = torch.cat(all_outputs)
+    results = calculate_metrics(targets_cat, outputs_cat)
+    
+    # 5. Guardar Matriz de Confusión
+    cm_path = FIGURES_DIR / f"confusion_matrix_{target_category}.png"
+    plot_confusion_matrix(targets_cat, outputs_cat, target_category, cm_path)
+    logger.info(f"Matriz de confusión guardada en: {cm_path}")
     
     logger.info(f"RESULTADOS FINALES ({target_category}):")
     logger.info(f"  AUC: {results['auc']:.4f}")
@@ -51,6 +57,7 @@ def evaluate_model(model_name, target_category):
     logger.info(f"  Especificidad: {results['specificity']:.4f}")
     logger.info(f"  Precisión: {results['precision']:.4f}")
     
+    results['confusion_matrix_path'] = str(cm_path)
     return results
 
 if __name__ == "__main__":

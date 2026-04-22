@@ -67,7 +67,7 @@ def test_single_image(img_path, weights_path):
 
 if __name__ == "__main__":
     # Prueba con una imagen del dataset
-    img_path = r"C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\data\imagenes_cancer\Polipos\imagenes con polipos destacados\output\original\set3_0051.jpg"
+    img_path = r"C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\data\imagenes_cancer\Polipos\imagenes con polipos destacados\original\set3_0051.jpg"
     weights = r"C:\Users\alber\AOT-GAN-for-Inpainting\experiments\G0000000.pt"
     
     if Path(img_path).exists():

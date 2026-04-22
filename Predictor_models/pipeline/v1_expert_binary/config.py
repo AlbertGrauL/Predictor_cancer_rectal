@@ -7,7 +7,7 @@ DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
 
 # Categorías y Carpetas Específicas
 PATHS = {
-    "polipos": DATA_DIR / "Polipos" / "imagenes con polipos destacados" / "output" / "original",
+    "polipos": DATA_DIR / "Polipos" / "imagenes con polipos destacados" / "original",
     "sangre": DATA_DIR / "Sangre_Paredes" / "sangre_activa",
     "inflamacion": DATA_DIR / "Sangre_Paredes" / "inflamacion_leve",
     "negativos": DATA_DIR / "Casos_negativos"
@@ -30,10 +30,12 @@ import torch
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # --- Logging y Artefactos ---
-LOGS_DIR = BASE_DIR / "logs"
-MODELS_DIR = BASE_DIR / "artifacts" / "models"
-EXPERIMENTS_DIR = BASE_DIR / "experiments"
+LOGS_DIR = BASE_DIR / "Predictor_models" / "logs"
+MODELS_DIR = BASE_DIR / "Predictor_models" / "artifacts" / "models"
+FIGURES_DIR = BASE_DIR / "Predictor_models" / "artifacts" / "figures"
+EXPERIMENTS_DIR = BASE_DIR / "Predictor_models" / "experiments"
 
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(MODELS_DIR, exist_ok=True)
+os.makedirs(FIGURES_DIR, exist_ok=True)
 os.makedirs(EXPERIMENTS_DIR, exist_ok=True)
