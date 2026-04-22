@@ -8,7 +8,7 @@ from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from Predictor_models.pipeline.inference import Predictor
+from Predictor_models.pipeline.v1_expert_binary.inference import Predictor
 
 app = FastAPI()
 

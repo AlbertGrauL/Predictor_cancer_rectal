@@ -5,9 +5,9 @@ from glob import glob
 from pathlib import Path
 from tqdm import tqdm
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data" / "imagenes_cancer"
-MASKS_OUT_DIR = BASE_DIR / "data" / "text_masks"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
+MASKS_OUT_DIR = DATA_DIR.parent / "text_masks"
 
 def init_dirs():
     os.makedirs(MASKS_OUT_DIR, exist_ok=True)
@@ -63,7 +63,7 @@ def process_all_images():
     
     valid_count = 0
     for img_path in tqdm(all_images):
-        if "aotgan_train" in img_path or "text_masks" in img_path or "_cleaned" in img_path or "output/original" in img_path:
+        if "aotgan_train" in img_path or "text_masks" in img_path or "_cleaned" in img_path or "Polipos/imagenes con polipos destacados/original" in img_path:
             continue # Evitar procesar lo ya limpio
             
         rel_path = Path(img_path).relative_to(DATA_DIR)
