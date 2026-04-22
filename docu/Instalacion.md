@@ -144,3 +144,91 @@ npm start
 
 La aplicación web estará disponible en: [http://localhost:4200](http://localhost:4200)
 
+---
+
+## Resultados
+
+Esta sección compara los dos enfoques de modelado implementados en el proyecto.
+
+---
+
+### V1 — Especialistas Binarios (`Predictor_models`)
+
+El primer enfoque entrena **4 modelos independientes** bajo la estrategia *One-vs-Rest*: cada red aprende a detectar su categoría clínica frente a todas las demás.
+
+**Configuración de entrenamiento:**
+
+| Parámetro | Valor |
+| :--- | :--- |
+| Arquitectura | EfficientNet-B0 (ImageNet pretrained) |
+| Estrategia | One-vs-Rest (4 clasificadores binarios) |
+| Optimizer | Adam |
+| Loss | BCEWithLogitsLoss |
+| Split Train/Val/Test | 80 / 10 / 10 % |
+| Early stopping | patience = 7 |
+| Dataset total | ~4 900 imágenes (train+val) por especialista |
+
+**Mejores métricas de validación** *(mejor checkpoint por AUC-ROC)*:
+
+| Especialista | Val Loss | AUC-ROC | Sensibilidad |
+| :--- | :---: | :---: | :---: |
+| Pólipos | 0.0008 | **1.0000** | **1.0000** |
+| Inflamación | 0.0727 | **0.9930** | 0.8537 |
+| Sangre | 0.0753 | 0.9897 | 0.9412 |
+| Negativos | 0.4224 | 0.7177 | 0.6029 |
+
+> **Observación:** El modelo de *Negativos* muestra un AUC considerablemente inferior (0.72). La categoría agrupa imágenes heterogéneas (ciego normal, píloro, márgenes de resección) que comparten rasgos visuales con las categorías positivas, lo que dificulta la separación binaria.
+
+---
+
+### V2 — Clasificador Multiclase con Comparativa de Arquitecturas (`predictor_models_v`)
+
+El segundo enfoque unifica el problema en un único clasificador que distingue entre tres clases: **polipo**, **sano** y **otras_patologias**. Se comparan tres arquitecturas de forma sistemática con el mismo pipeline.
+
+**Configuración de entrenamiento:**
+
+| Parámetro | Valor |
+| :--- | :--- |
+| Arquitecturas comparadas | ResNet-50 · EfficientNet-B0 · DenseNet-121 |
+| Estrategia | Multiclase unificada (3 clases) |
+| Optimizer | AdamW (lr = 3 × 10⁻⁴, wd = 1 × 10⁻⁴) |
+| Scheduler | ReduceLROnPlateau (factor 0.5, patience 2) |
+| Loss | CrossEntropyLoss con pesos de clase |
+| Split Train/Val/Test | 70 / 15 / 15 % |
+| Early stopping | patience = 5 |
+| Fine-tuning | Freeze backbone (época 1) → descongelado completo (época 2+) |
+
+**Preprocesamiento y aumentación añadidos:**
+
+| Técnica | Descripción |
+| :--- | :--- |
+| Bottom-left mask | Enmascara el 30 % × 35 % inferior-izquierdo (texto de equipo) |
+| Random Erasing | p = 0.25, scale [0.02–0.10] (regularización) |
+
+**Métricas primarias reportadas:** Accuracy · F1-macro · F1-weighted · AUC-ROC · PR-AUC
+
+> **Estado:** Los artefactos de V2 aún no han sido generados. Para ejecutar la comparativa completa: `python -m predictor_models_v.pipeline.image.run_model_comparison`
+
+---
+
+### Comparativa de Enfoques
+
+| Aspecto | V1 — OvR Binario | V2 — Multiclase |
+| :--- | :--- | :--- |
+| Nº de modelos | 4 (uno por clase) | 1 (arquitecturas rotadas) |
+| Salida | Probabilidad binaria por clase | Softmax sobre 3 clases |
+| Clases | pólipos / sangre / inflamación / negativos | polipo / sano / otras_patologias |
+| Optimizer | Adam | AdamW + weight decay |
+| Loss | BCEWithLogitsLoss | CrossEntropyLoss + class weights |
+| Scheduler | — | ReduceLROnPlateau |
+| Preprocessing | — | Máscara esquina + Random Erasing |
+| Fine-tuning | Backbone completo desde epoch 1 | Freeze → unfreeze en epoch 2 |
+| Métricas objetivo | AUC-ROC, Sensibilidad | F1-macro, Accuracy, AUC-ROC, PR-AUC |
+| Arquitecturas probadas | EfficientNet-B0 | ResNet-50, EfficientNet-B0, DenseNet-121 |
+
+**Ventajas de V2 frente a V1:**
+- Elimina la inconsistencia del modelo *Negativos* al modelar todas las clases conjuntamente.
+- Los pesos de clase en la loss compensan el desbalance sin necesidad de submuestreo.
+- La comparativa sistemática de arquitecturas permite seleccionar la óptima con datos reales.
+- El preprocesamiento de la máscara inferior-izquierda elimina texto de equipo que actúa como atajo (*shortcut*) en V1.
+

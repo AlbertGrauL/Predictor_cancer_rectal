@@ -1,1 +1,1 @@
-# Predictor_models/pipeline/__init__.py
+"""Pipeline de entrenamiento y evaluacion para el proyecto."""

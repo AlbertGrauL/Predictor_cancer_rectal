@@ -1,0 +1,683 @@
+<main class="pt-8 pb-24 px-6 max-w-7xl mx-auto">
+
+  <!-- Hero -->
+  <header class="mb-16 text-center max-w-3xl mx-auto">
+    <div class="inline-flex items-center gap-2 bg-primary-fixed text-primary px-4 py-2 rounded-full mb-6">
+      <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">science</span>
+      <span class="text-sm font-semibold tracking-wide uppercase">Evaluación de Modelos</span>
+    </div>
+    <h1 class="font-headline text-5xl md:text-6xl font-bold tracking-tight text-on-surface mb-6">
+      Resultados <span class="bg-clip-text text-transparent bg-gradient-to-br from-[#00478d] to-[#005eb8]">Modelo</span>
+    </h1>
+    <p class="text-on-surface-variant text-lg leading-relaxed">
+      Comparativa exhaustiva entre la versión 1 (especialistas binarios One-vs-Rest) y la versión 2
+      (clasificador multiclase con benchmarking de arquitecturas).
+    </p>
+  </header>
+
+  <!-- ── V1 RESULTADOS ─────────────────────────────────────────────── -->
+  <section class="mb-16">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-blue-700">hub</span>
+      </div>
+      <div>
+        <h2 class="font-headline text-2xl font-bold text-on-surface">V1 — Especialistas Binarios</h2>
+        <p class="text-sm text-on-surface-variant">EfficientNet-B0 · One-vs-Rest · Adam · BCEWithLogitsLoss</p>
+      </div>
+    </div>
+
+    <!-- Cards métricas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+      <div *ngFor="let m of v1Metrics"
+           class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] overflow-hidden">
+        <div class="px-6 pt-6 pb-4 border-b border-surface-container flex items-center justify-between">
+          <h3 class="font-headline font-bold text-lg text-on-surface">{{ m.name }}</h3>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full" [class]="getAucBadgeClass(m.auc)">
+            {{ getAucBadge(m.auc) }}
+          </span>
+        </div>
+        <div class="p-6 space-y-4">
+          <!-- AUC gauge -->
+          <div>
+            <div class="flex justify-between text-xs font-medium text-on-surface-variant mb-1">
+              <span>AUC-ROC</span>
+              <span [class]="getAucClass(m.auc)">{{ m.auc | number:'1.4-4' }}</span>
+            </div>
+            <div class="h-2.5 w-full bg-surface-container rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-700"
+                   [style.width]="(m.auc * 100) + '%'"
+                   [class]="m.auc >= 0.99 ? 'bg-emerald-500' : m.auc >= 0.95 ? 'bg-blue-500' : m.auc >= 0.85 ? 'bg-amber-500' : 'bg-red-500'">
+              </div>
+            </div>
+          </div>
+          <!-- Sensibilidad gauge -->
+          <div>
+            <div class="flex justify-between text-xs font-medium text-on-surface-variant mb-1">
+              <span>Sensibilidad</span>
+              <span class="font-bold">{{ m.sensitivity | number:'1.4-4' }}</span>
+            </div>
+            <div class="h-2.5 w-full bg-surface-container rounded-full overflow-hidden">
+              <div class="h-full bg-primary/70 rounded-full" [style.width]="(m.sensitivity * 100) + '%'"></div>
+            </div>
+          </div>
+          <!-- Detalles -->
+          <div class="pt-2 grid grid-cols-2 gap-y-2 text-xs text-on-surface-variant">
+            <span>Val Loss</span>
+            <span class="font-semibold text-right text-on-surface">{{ m.valLoss | number:'1.4-4' }}</span>
+            <span>Mejor época</span>
+            <span class="font-semibold text-right text-on-surface">{{ m.bestEpoch }}</span>
+            <span>Early stop</span>
+            <span class="font-semibold text-right text-on-surface">época {{ m.earlyStopEpoch }}</span>
+            <span>Train / Val</span>
+            <span class="font-semibold text-right text-on-surface">{{ m.trainSamples }} / {{ m.valSamples }}</span>
+          </div>
+          <!-- Advertencia si hay nota -->
+          <div *ngIf="m.note" class="mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs text-amber-800 leading-relaxed">
+            <span class="material-symbols-outlined text-sm align-middle mr-1" style="font-variation-settings:'FILL' 1;">warning</span>
+            {{ m.note }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla resumen V1 -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] overflow-hidden">
+      <div class="px-6 py-4 border-b border-surface-container">
+        <h3 class="font-headline font-semibold text-base text-on-surface">Resumen de validación — mejor checkpoint por especialista</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-surface-container text-on-surface-variant text-xs uppercase tracking-wider">
+            <tr>
+              <th class="px-6 py-3 text-left font-semibold">Especialista</th>
+              <th class="px-6 py-3 text-center font-semibold">AUC-ROC</th>
+              <th class="px-6 py-3 text-center font-semibold">Sensibilidad</th>
+              <th class="px-6 py-3 text-center font-semibold">Val Loss</th>
+              <th class="px-6 py-3 text-center font-semibold">Mejor época</th>
+              <th class="px-6 py-3 text-center font-semibold">Valoración</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-container">
+            <tr *ngFor="let m of v1Metrics" class="hover:bg-surface-container/40 transition-colors">
+              <td class="px-6 py-4 font-semibold text-on-surface">{{ m.name }}</td>
+              <td class="px-6 py-4 text-center" [class]="getAucClass(m.auc)">{{ m.auc | number:'1.4-4' }}</td>
+              <td class="px-6 py-4 text-center font-medium">{{ m.sensitivity | number:'1.4-4' }}</td>
+              <td class="px-6 py-4 text-center text-on-surface-variant">{{ m.valLoss | number:'1.4-4' }}</td>
+              <td class="px-6 py-4 text-center text-on-surface-variant">{{ m.bestEpoch }}</td>
+              <td class="px-6 py-4 text-center">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full" [class]="getAucBadgeClass(m.auc)">
+                  {{ getAucBadge(m.auc) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="px-6 py-3 bg-surface-container/30 text-xs text-on-surface-variant">
+        Fuente: <code class="font-mono">Predictor_models/logs/train_20260416_004252.log</code> · Dataset: Kvasir + imagenes_cancer
+      </div>
+    </div>
+  </section>
+
+  <!-- ── V2 ARQUITECTURA ────────────────────────────────────────────── -->
+  <section class="mb-16">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-emerald-700">account_tree</span>
+      </div>
+      <div>
+        <h2 class="font-headline text-2xl font-bold text-on-surface">V2 — Clasificador Multiclase</h2>
+        <p class="text-sm text-on-surface-variant">ResNet-50 · EfficientNet-B0 · DenseNet-121 · AdamW · CrossEntropyLoss</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Arquitecturas -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="material-symbols-outlined text-primary">layers</span>
+          <h3 class="font-headline font-semibold text-base">Arquitecturas comparadas</h3>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-center gap-3 p-3 bg-surface-container rounded-lg">
+            <span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span>
+            <div>
+              <p class="font-semibold text-sm">ResNet-50</p>
+              <p class="text-xs text-on-surface-variant">Skip connections, 25.6 M params</p>
+            </div>
+          </li>
+          <li class="flex items-center gap-3 p-3 bg-surface-container rounded-lg">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"></span>
+            <div>
+              <p class="font-semibold text-sm">EfficientNet-B0</p>
+              <p class="text-xs text-on-surface-variant">Compound scaling, 5.3 M params</p>
+            </div>
+          </li>
+          <li class="flex items-center gap-3 p-3 bg-surface-container rounded-lg">
+            <span class="w-2 h-2 rounded-full bg-violet-500 flex-shrink-0"></span>
+            <div>
+              <p class="font-semibold text-sm">DenseNet-121</p>
+              <p class="text-xs text-on-surface-variant">Dense connections, 8 M params</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Clases y datos -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="material-symbols-outlined text-primary">category</span>
+          <h3 class="font-headline font-semibold text-base">Clases & datos</h3>
+        </div>
+        <div class="space-y-3">
+          <div class="p-3 bg-surface-container rounded-lg">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide font-semibold mb-1">Clase 0</p>
+            <p class="font-semibold text-sm">Polipo</p>
+            <p class="text-xs text-on-surface-variant">polyps + output/original</p>
+          </div>
+          <div class="p-3 bg-surface-container rounded-lg">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide font-semibold mb-1">Clase 1</p>
+            <p class="font-semibold text-sm">Sano</p>
+            <p class="text-xs text-on-surface-variant">Casos_negativos/ (ciego, píloro, márgenes)</p>
+          </div>
+          <div class="p-3 bg-surface-container rounded-lg">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide font-semibold mb-1">Clase 2</p>
+            <p class="font-semibold text-sm">Otras Patologías</p>
+            <p class="text-xs text-on-surface-variant">Sangre_Paredes/ (inflamación, sangre)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="material-symbols-outlined text-primary">settings</span>
+          <h3 class="font-headline font-semibold text-base">Configuración de entrenamiento</h3>
+        </div>
+        <dl class="space-y-2 text-sm">
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Optimizer</dt><dd class="font-semibold">AdamW</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Learning rate</dt><dd class="font-semibold">3 × 10⁻⁴</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Weight decay</dt><dd class="font-semibold">1 × 10⁻⁴</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Scheduler</dt><dd class="font-semibold">ReduceLROnPlateau</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Loss</dt><dd class="font-semibold">CrossEntropy + pesos</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Split</dt><dd class="font-semibold">70 / 15 / 15 %</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Épocas</dt><dd class="font-semibold">20 (patience 5)</dd></div>
+          <div class="flex justify-between"><dt class="text-on-surface-variant">Batch size</dt><dd class="font-semibold">16</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Mejoras de preprocesamiento -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="material-symbols-outlined text-primary">filter_center_focus</span>
+          <h3 class="font-headline font-semibold text-base">Preprocesamiento</h3>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 mt-0.5 text-base" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <div>
+              <p class="font-semibold text-sm">Bottom-left mask (30% × 35%)</p>
+              <p class="text-xs text-on-surface-variant">Enmascara el logo/texto del equipo endoscópico en la esquina inferior-izquierda. Elimina un atajo estadístico (<em>shortcut</em>) que V1 podría haber aprendido.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+            <span class="material-symbols-outlined text-blue-600 mt-0.5 text-base" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <div>
+              <p class="font-semibold text-sm">Random Erasing (p = 0.25)</p>
+              <p class="text-xs text-on-surface-variant">Borra parches aleatorios durante el entrenamiento (scale 2–10%). Mejora robustez ante oclusiones parciales y reduce sobreajuste.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="material-symbols-outlined text-primary">analytics</span>
+          <h3 class="font-headline font-semibold text-base">Métricas objetivo (V2)</h3>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-3 bg-surface-container rounded-lg text-center">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide mb-1">Primaria</p>
+            <p class="font-bold text-primary">F1-macro</p>
+          </div>
+          <div class="p-3 bg-surface-container rounded-lg text-center">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide mb-1">Accuracy</p>
+            <p class="font-bold text-on-surface">Acc</p>
+          </div>
+          <div class="p-3 bg-surface-container rounded-lg text-center">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide mb-1">Curva ROC</p>
+            <p class="font-bold text-on-surface">AUC-ROC</p>
+          </div>
+          <div class="p-3 bg-surface-container rounded-lg text-center">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide mb-1">Precisión</p>
+            <p class="font-bold text-on-surface">PR-AUC</p>
+          </div>
+          <div class="col-span-2 p-3 bg-surface-container rounded-lg text-center">
+            <p class="text-xs text-on-surface-variant uppercase tracking-wide mb-1">Ponderada</p>
+            <p class="font-bold text-on-surface">F1-weighted</p>
+          </div>
+        </div>
+        <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-100">
+          <p class="text-xs text-amber-800">
+            <span class="material-symbols-outlined text-sm align-middle mr-1" style="font-variation-settings:'FILL' 1;">info</span>
+            Los artefactos de V2 están pendientes de entrenamiento. Los resultados se publicarán al completar <code class="font-mono text-amber-900">run_model_comparison.py</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMPARATIVA LADO A LADO ───────────────────────────────────── -->
+  <section class="mb-16">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-violet-700">compare_arrows</span>
+      </div>
+      <div>
+        <h2 class="font-headline text-2xl font-bold text-on-surface">Comparativa Exhaustiva V1 vs V2</h2>
+        <p class="text-sm text-on-surface-variant">Diferencias de diseño, entrenamiento y evaluación</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-surface-container text-xs uppercase tracking-wider">
+              <th class="px-6 py-4 text-left font-semibold text-on-surface-variant w-1/4">Aspecto</th>
+              <th class="px-6 py-4 text-left font-semibold text-blue-700 w-[37.5%]">
+                <span class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base">hub</span>
+                  V1 — OvR Binario
+                </span>
+              </th>
+              <th class="px-6 py-4 text-left font-semibold text-emerald-700 w-[37.5%]">
+                <span class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base">account_tree</span>
+                  V2 — Multiclase
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-container">
+            <tr *ngFor="let row of comparisonRows; let i = index"
+                class="hover:bg-surface-container/40 transition-colors"
+                [class.bg-surface-container-lowest]="i % 2 === 0"
+                [class.bg-surface-container-low]="i % 2 !== 0">
+              <td class="px-6 py-4 font-semibold text-on-surface align-top">{{ row.aspect }}</td>
+              <td class="px-6 py-4 text-on-surface-variant align-top">{{ row.v1 }}</td>
+              <td class="px-6 py-4 align-top">
+                <span class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-base mt-0.5 flex-shrink-0" [class]="getImpactClass(row.impact)">
+                    {{ getImpactIcon(row.impact) }}
+                  </span>
+                  <span [class]="row.impact === 'positive' ? 'font-semibold text-on-surface' : 'text-on-surface-variant'">
+                    {{ row.v2 }}
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ANÁLISIS DE FORTALEZAS Y DEBILIDADES ──────────────────────── -->
+  <section class="mb-16">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-amber-700">insights</span>
+      </div>
+      <h2 class="font-headline text-2xl font-bold text-on-surface">Análisis de Fortalezas y Debilidades</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- V1 -->
+      <div class="space-y-4">
+        <h3 class="font-headline font-bold text-lg text-blue-700 flex items-center gap-2">
+          <span class="material-symbols-outlined">hub</span>V1 — Especialistas Binarios
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">AUC-ROC excelente en pólipos e inflamación</p>
+              <p class="text-xs text-emerald-700 mt-0.5">AUC ≥ 0.99 demuestra separabilidad casi perfecta en las clases bien representadas.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">Sensibilidad clínica alta en sangre (0.94)</p>
+              <p class="text-xs text-emerald-700 mt-0.5">Tasa de verdaderos positivos suficiente para uso como criba preliminar.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">Convergencia rápida</p>
+              <p class="text-xs text-emerald-700 mt-0.5">Pólipos converge en 26 épocas; early stopping evita sobreajuste de forma efectiva.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl border border-red-100">
+            <span class="material-symbols-outlined text-red-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_down</span>
+            <div>
+              <p class="font-semibold text-sm text-red-900">Modelo Negativos deficiente (AUC 0.72)</p>
+              <p class="text-xs text-red-700 mt-0.5">La mezcla de subcategorías (ciego, píloro, márgenes) introduce ruido irreducible en el clasificador binario.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl border border-red-100">
+            <span class="material-symbols-outlined text-red-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_down</span>
+            <div>
+              <p class="font-semibold text-sm text-red-900">Sin preprocesamiento del texto del equipo</p>
+              <p class="text-xs text-red-700 mt-0.5">El logo de la cámara endoscópica en la esquina puede actuar como atajo estadístico (<em>shortcut</em>), generalizando por artefacto en lugar de por contenido clínico.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl border border-red-100">
+            <span class="material-symbols-outlined text-red-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_down</span>
+            <div>
+              <p class="font-semibold text-sm text-red-900">Una sola arquitectura, sin ablación</p>
+              <p class="text-xs text-red-700 mt-0.5">No es posible saber si EfficientNet-B0 es la opción óptima sin compararlo con alternativas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- V2 -->
+      <div class="space-y-4">
+        <h3 class="font-headline font-bold text-lg text-emerald-700 flex items-center gap-2">
+          <span class="material-symbols-outlined">account_tree</span>V2 — Multiclase
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">Resolución del problema de Negativos</p>
+              <p class="text-xs text-emerald-700 mt-0.5">Al modelar la clase "sano" directamente, la red compite entre todas las clases a la vez, eliminando la confusión del OvR.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">Pesos de clase compensan el desbalance</p>
+              <p class="text-xs text-emerald-700 mt-0.5">CrossEntropyLoss con pesos penaliza más los fallos en clases minoritarias, sin necesidad de submuestreo.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">Benchmarking sistemático de 3 arquitecturas</p>
+              <p class="text-xs text-emerald-700 mt-0.5">Pipeline reproducible que entrena y evalúa ResNet-50, EfficientNet-B0 y DenseNet-121 bajo idénticas condiciones.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="material-symbols-outlined text-emerald-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">thumb_up</span>
+            <div>
+              <p class="font-semibold text-sm text-emerald-900">Preprocesamiento que elimina atajos</p>
+              <p class="text-xs text-emerald-700 mt-0.5">La máscara bottom-left y Random Erasing fuerzan a la red a aprender características clínicas reales.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-xl border border-amber-100">
+            <span class="material-symbols-outlined text-amber-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">info</span>
+            <div>
+              <p class="font-semibold text-sm text-amber-900">Sin resultados de entrenamiento aún</p>
+              <p class="text-xs text-amber-700 mt-0.5">Los artefactos se generarán al ejecutar <code class="font-mono">run_model_comparison.py</code>. Los resultados finales actualizarán esta sección.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-xl border border-amber-100">
+            <span class="material-symbols-outlined text-amber-600 flex-shrink-0" style="font-variation-settings:'FILL' 1;">info</span>
+            <div>
+              <p class="font-semibold text-sm text-amber-900">Menos épocas por diseño (20 vs 50)</p>
+              <p class="text-xs text-amber-700 mt-0.5">El freeze de backbone en época 1 + scheduler compensa la menor cantidad de épocas con una convergencia más estable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GRÁFICOS COMPARATIVOS ─────────────────────────────────────── -->
+  <section class="mb-16">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-blue-700">bar_chart</span>
+      </div>
+      <div>
+        <h2 class="font-headline text-2xl font-bold text-on-surface">Visualización Comparativa</h2>
+        <p class="text-sm text-on-surface-variant">Métricas de V1 y comparativa de capacidades V1 vs V2</p>
+      </div>
+    </div>
+
+    <!-- Fila superior: AUC + Sensibilidad en paralelo -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+      <!-- Gráfico AUC-ROC V1 -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">AUC-ROC por Especialista</h3>
+            <p class="text-xs text-on-surface-variant mt-0.5">V1 — mejor checkpoint de validación</p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800">V1</span>
+        </div>
+        <svg [attr.width]="'100%'" [attr.viewBox]="'0 0 ' + chartW + ' ' + svgH(aucBars.length)"
+             [attr.height]="svgH(aucBars.length)" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid lines -->
+          <line *ngFor="let t of [0.25, 0.5, 0.75, 1.0]"
+                [attr.x1]="labelW + barPx(t)" [attr.y1]="0"
+                [attr.x2]="labelW + barPx(t)" [attr.y2]="svgH(aucBars.length)"
+                stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+          <!-- Bars -->
+          <g *ngFor="let b of aucBars; let i = index">
+            <!-- Background track -->
+            <rect [attr.x]="labelW" [attr.y]="barY(i)"
+                  [attr.width]="barMaxW" [attr.height]="chartH"
+                  rx="6" fill="#f1f5f9"/>
+            <!-- Value bar -->
+            <rect [attr.x]="labelW" [attr.y]="barY(i)"
+                  [attr.width]="barPx(b.value)" [attr.height]="chartH"
+                  rx="6" [attr.fill]="b.color" opacity="0.85"/>
+            <!-- Label -->
+            <text [attr.x]="labelW - 8" [attr.y]="textY(i)"
+                  text-anchor="end" font-size="12" font-family="Inter, sans-serif"
+                  font-weight="600" fill="#475569">{{ b.label }}</text>
+            <!-- Value -->
+            <text [attr.x]="labelW + barPx(b.value) + 8" [attr.y]="textY(i)"
+                  font-size="12" font-family="Inter, sans-serif"
+                  font-weight="700" [attr.fill]="b.color">{{ b.value | number:'1.4-4' }}</text>
+          </g>
+          <!-- X axis labels -->
+          <text *ngFor="let t of [0, 0.25, 0.5, 0.75, 1.0]"
+                [attr.x]="labelW + barPx(t)" [attr.y]="svgH(aucBars.length) - 2"
+                text-anchor="middle" font-size="9" fill="#94a3b8" font-family="Inter, sans-serif">
+            {{ t | number:'1.2-2' }}
+          </text>
+        </svg>
+        <!-- Leyenda -->
+        <div class="flex flex-wrap gap-3 mt-4">
+          <div *ngFor="let b of aucBars" class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-sm" [style.background]="b.color"></span>
+            <span class="text-xs text-on-surface-variant">{{ b.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico Sensibilidad V1 -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Sensibilidad (Recall) por Especialista</h3>
+            <p class="text-xs text-on-surface-variant mt-0.5">V1 — mejor checkpoint de validación</p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800">V1</span>
+        </div>
+        <svg [attr.width]="'100%'" [attr.viewBox]="'0 0 ' + chartW + ' ' + svgH(sensBars.length)"
+             [attr.height]="svgH(sensBars.length)" xmlns="http://www.w3.org/2000/svg">
+          <line *ngFor="let t of [0.25, 0.5, 0.75, 1.0]"
+                [attr.x1]="labelW + barPx(t)" [attr.y1]="0"
+                [attr.x2]="labelW + barPx(t)" [attr.y2]="svgH(sensBars.length)"
+                stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+          <g *ngFor="let b of sensBars; let i = index">
+            <rect [attr.x]="labelW" [attr.y]="barY(i)"
+                  [attr.width]="barMaxW" [attr.height]="chartH"
+                  rx="6" fill="#f1f5f9"/>
+            <rect [attr.x]="labelW" [attr.y]="barY(i)"
+                  [attr.width]="barPx(b.value)" [attr.height]="chartH"
+                  rx="6" [attr.fill]="b.color" opacity="0.85"/>
+            <text [attr.x]="labelW - 8" [attr.y]="textY(i)"
+                  text-anchor="end" font-size="12" font-family="Inter, sans-serif"
+                  font-weight="600" fill="#475569">{{ b.label }}</text>
+            <text [attr.x]="labelW + barPx(b.value) + 8" [attr.y]="textY(i)"
+                  font-size="12" font-family="Inter, sans-serif"
+                  font-weight="700" [attr.fill]="b.color">{{ b.value | number:'1.4-4' }}</text>
+          </g>
+          <text *ngFor="let t of [0, 0.25, 0.5, 0.75, 1.0]"
+                [attr.x]="labelW + barPx(t)" [attr.y]="svgH(sensBars.length) - 2"
+                text-anchor="middle" font-size="9" fill="#94a3b8" font-family="Inter, sans-serif">
+            {{ t | number:'1.2-2' }}
+          </text>
+        </svg>
+        <div class="flex flex-wrap gap-3 mt-4">
+          <div *ngFor="let b of sensBars" class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-sm" [style.background]="b.color"></span>
+            <span class="text-xs text-on-surface-variant">{{ b.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila inferior: barras agrupadas V1 vs V2 + radar -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Barras agrupadas: capacidades relativas V1 vs V2 -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Capacidades del Pipeline</h3>
+            <p class="text-xs text-on-surface-variant mt-0.5">Puntuación relativa V1 vs V2 (escala 0–1)</p>
+          </div>
+          <div class="flex gap-2">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800">V1</span>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">V2</span>
+          </div>
+        </div>
+        <svg [attr.width]="'100%'" [attr.viewBox]="'0 0 ' + chartW + ' ' + svgH(approachBars.length * 2 + approachBars.length - 1)"
+             xmlns="http://www.w3.org/2000/svg">
+          <ng-container *ngFor="let b of approachBars; let i = index">
+            <!-- V1 bar -->
+            <text [attr.x]="labelW - 8" [attr.y]="barY(i * 3)"
+                  text-anchor="end" font-size="11" font-family="Inter, sans-serif"
+                  font-weight="600" fill="#475569">{{ b.label }}</text>
+            <rect [attr.x]="labelW" [attr.y]="barY(i * 3)"
+                  [attr.width]="barMaxW" [attr.height]="chartH - 6"
+                  rx="5" fill="#f1f5f9"/>
+            <rect [attr.x]="labelW" [attr.y]="barY(i * 3)"
+                  [attr.width]="barPx(b.v1)" [attr.height]="chartH - 6"
+                  rx="5" fill="#3b82f6" opacity="0.75"/>
+            <text [attr.x]="labelW + barPx(b.v1) + 6" [attr.y]="barY(i * 3) + (chartH - 6) / 2 + 4"
+                  font-size="10" font-family="Inter, sans-serif" font-weight="700" fill="#3b82f6">V1</text>
+            <!-- V2 bar -->
+            <rect [attr.x]="labelW" [attr.y]="barY(i * 3) + (chartH - 4)"
+                  [attr.width]="barMaxW" [attr.height]="chartH - 6"
+                  rx="5" fill="#f1f5f9"/>
+            <rect [attr.x]="labelW" [attr.y]="barY(i * 3) + (chartH - 4)"
+                  [attr.width]="barPx(b.v2 ?? 0)" [attr.height]="chartH - 6"
+                  rx="5" fill="#10b981" opacity="0.75"/>
+            <text [attr.x]="labelW + barPx(b.v2 ?? 0) + 6" [attr.y]="barY(i * 3) + (chartH - 4) + (chartH - 6) / 2 + 4"
+                  font-size="10" font-family="Inter, sans-serif" font-weight="700" fill="#10b981">V2</text>
+          </ng-container>
+        </svg>
+        <p class="text-xs text-on-surface-variant mt-3">* Puntuaciones relativas basadas en el diseño del pipeline. Los resultados de V2 se actualizarán tras el entrenamiento.</p>
+      </div>
+
+      <!-- Radar chart -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-[0_8px_24px_rgba(25,28,30,0.06)] p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Radar de Capacidades</h3>
+            <p class="text-xs text-on-surface-variant mt-0.5">Comparativa multidimensional V1 vs V2</p>
+          </div>
+          <div class="flex gap-2">
+            <span class="flex items-center gap-1 text-xs font-semibold text-blue-700">
+              <span class="w-3 h-1.5 rounded-sm bg-blue-400 inline-block"></span>V1
+            </span>
+            <span class="flex items-center gap-1 text-xs font-semibold text-emerald-700">
+              <span class="w-3 h-1.5 rounded-sm bg-emerald-400 inline-block"></span>V2
+            </span>
+          </div>
+        </div>
+        <svg width="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid rings -->
+          <polygon *ngFor="let scale of [0.25, 0.5, 0.75, 1.0]"
+                   [attr.points]="radarGridPolygon(scale)"
+                   fill="none" stroke="#e2e8f0" stroke-width="1"/>
+          <!-- Axis lines -->
+          <line *ngFor="let ax of radarAxes; let i = index"
+                [attr.x1]="radarCx" [attr.y1]="radarCy"
+                [attr.x2]="radarGridPoint(i, radarR).x"
+                [attr.y2]="radarGridPoint(i, radarR).y"
+                stroke="#e2e8f0" stroke-width="1"/>
+          <!-- V1 polygon -->
+          <polygon [attr.points]="radarPolygon('v1')"
+                   fill="#3b82f6" fill-opacity="0.15"
+                   stroke="#3b82f6" stroke-width="2" stroke-linejoin="round"/>
+          <!-- V2 polygon -->
+          <polygon [attr.points]="radarPolygon('v2')"
+                   fill="#10b981" fill-opacity="0.15"
+                   stroke="#10b981" stroke-width="2" stroke-linejoin="round"/>
+          <!-- V1 dots -->
+          <circle *ngFor="let ax of radarAxes; let i = index"
+                  [attr.cx]="radarPoint(i, ax.v1).x"
+                  [attr.cy]="radarPoint(i, ax.v1).y"
+                  r="4" fill="#3b82f6"/>
+          <!-- V2 dots -->
+          <circle *ngFor="let ax of radarAxes; let i = index"
+                  [attr.cx]="radarPoint(i, ax.v2).x"
+                  [attr.cy]="radarPoint(i, ax.v2).y"
+                  r="4" fill="#10b981"/>
+          <!-- Labels -->
+          <text *ngFor="let ax of radarAxes; let i = index"
+                [attr.x]="radarLabelPos(i).x"
+                [attr.y]="radarLabelPos(i).y"
+                text-anchor="middle" dominant-baseline="middle"
+                font-size="11" font-family="Inter, sans-serif"
+                font-weight="600" fill="#475569">{{ ax.label }}</text>
+          <!-- Scale labels -->
+          <text *ngFor="let scale of [0.25, 0.5, 0.75, 1.0]"
+                [attr.x]="radarCx + 4"
+                [attr.y]="radarCy - radarR * scale + 4"
+                font-size="8" fill="#94a3b8" font-family="Inter, sans-serif">
+            {{ scale | number:'1.0-0' | slice:0:3 }}
+          </text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONCLUSIÓN ─────────────────────────────────────────────────── -->
+  <section class="max-w-4xl mx-auto">
+    <div class="p-8 bg-primary-fixed rounded-xl border border-primary/10">
+      <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-primary text-3xl flex-shrink-0 mt-1" style="font-variation-settings:'FILL' 1;">lightbulb</span>
+        <div>
+          <h3 class="font-headline font-bold text-xl text-primary mb-3">Conclusión técnica</h3>
+          <p class="text-on-surface leading-relaxed mb-3">
+            V1 demostró que un enfoque OvR con EfficientNet-B0 es capaz de alcanzar AUC ≥ 0.99 en las clases
+            con alta separabilidad visual (pólipos, inflamación). Sin embargo, el modelo <em>Negativos</em> expone
+            la limitación inherente del diseño binario cuando una clase agrupa subcategorías heterogéneas.
+          </p>
+          <p class="text-on-surface leading-relaxed">
+            V2 aborda estas limitaciones de forma sistemática: unifica el espacio de decisión en un único modelo
+            multiclase, introduce regularización mediante preprocesamiento y augmentación, y establece un
+            protocolo de comparación riguroso entre tres arquitecturas de referencia. Los resultados de V2
+            determinarán qué arquitectura y configuración se despliega en producción.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
