@@ -5,9 +5,9 @@ from glob import glob
 from pathlib import Path
 from tqdm import tqdm
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data" / "imagenes_cancer"
-MASKS_OUT_DIR = BASE_DIR / "data" / "text_masks"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
+MASKS_OUT_DIR = DATA_DIR.parent / "text_masks"
 
 def init_dirs():
     os.makedirs(MASKS_OUT_DIR, exist_ok=True)

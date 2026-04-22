@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 
 # --- Rutas del Proyecto ---
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data" / "imagenes_cancer"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
 
 # Categorías y Carpetas Específicas
 PATHS = {

@@ -8,9 +8,9 @@ from pathlib import Path
 from tqdm import tqdm
 from torchvision.transforms import ToTensor
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data" / "imagenes_cancer"
-MASKS_DIR = BASE_DIR / "data" / "text_masks"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
+MASKS_DIR = DATA_DIR.parent / "text_masks"
 
 # Necesitamos importar AOT-GAN. Asumimos que esta al mismo nivel de tu proyecto
 AOTGAN_REPO_DIR = Path(r"C:\Users\alber\AOT-GAN-for-Inpainting\src")

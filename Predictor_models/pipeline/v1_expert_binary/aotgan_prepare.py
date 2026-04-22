@@ -5,9 +5,9 @@ import shutil
 from pathlib import Path
 from tqdm import tqdm
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data" / "imagenes_cancer"
-AOT_TRAIN_DIR = BASE_DIR / "data" / "aotgan_train"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+DATA_DIR = BASE_DIR / "Predictor_models" / "data" / "imagenes_cancer"
+AOT_TRAIN_DIR = DATA_DIR.parent / "aotgan_train"
 
 CLEAN_IMG_DIR = AOT_TRAIN_DIR / "images" / "colon_clean"
 MASKS_DIR = AOT_TRAIN_DIR / "masks" / "pconv"
