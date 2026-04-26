@@ -24,8 +24,8 @@ El sistema utiliza un Backbone de **EfficientNet-B0**, seleccionado por su equil
 
 Uno de los principales desafíos en el entrenamiento de IA médica es el sesgo introducido por la telemetría del equipo (texto en pantalla, logos del hospital). El sistema **v1** mitiga este sesgo mediante un pipeline de **Virtualización Mucosa**:
 
-1.  **Detección de Telemetría (Masking)**: Mediante el script `preprocess_masks.py`, el sistema identifica las regiones de texto (coordenadas de metadatos clínicos).
-2.  **Inpainting con AOT-GAN**: El script `preprocess_inpaint.py` emplea una red **AOT-GAN (Aggregated Contextual Transformations)**. Esta red reconstruye el tejido oculto tras el texto utilizando texturas de mucosa circundante, eliminando artefactos que de otro modo podrían actuar como "atajos" aprendidos (shortcuts) por la red neuronal.
+1.  **Detección de Telemetría (Masking)**: Mediante el módulo `preprocess_masks.py`, el sistema identifica en tiempo real las regiones de texto (coordenadas de metadatos clínicos).
+2.  **Inpainting Nativo con AOT-GAN**: La red **AOT-GAN (Aggregated Contextual Transformations)** ha sido integrada de forma nativa en el motor de inferencia (`Predictor`). Cuando llega una imagen con texto, la red reconstruye dinámicamente el tejido oculto tras las letras utilizando texturas de mucosa circundante. Esto ocurre en milisegundos de forma invisible para el usuario antes de pasar la imagen a los clasificadores EfficientNet, garantizando que los modelos no utilicen la telemetría como "atajos" predictivos.
 
 ---
 

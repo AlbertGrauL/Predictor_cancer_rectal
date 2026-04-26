@@ -12,3 +12,10 @@ wheels/
 # ── Datos ─────────────────────────────────────────────────────────────────────
 # Se ignora toda la carpeta de datos para evitar subir imágenes pesadas
 Predictor_models/data/
+
+# ── Artefactos, Modelos y Logs ────────────────────────────────────────────────
+Predictor_models/artifacts/
+Predictor_models/logs/
+Predictor_models/experiments/
+mlflow.db
+mlruns/

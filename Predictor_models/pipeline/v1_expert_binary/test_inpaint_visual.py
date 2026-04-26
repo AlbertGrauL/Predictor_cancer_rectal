@@ -1,5 +1,4 @@
 import torch
-import cv2
 import numpy as np
 from PIL import Image
 from pathlib import Path
@@ -10,7 +9,7 @@ AOTGAN_REPO_DIR = Path(r"C:\Users\alber\AOT-GAN-for-Inpainting\src")
 sys.path.append(str(AOTGAN_REPO_DIR))
 
 from model.aotgan import InpaintGenerator
-from Predictor_models.pipeline.preprocess_masks import generate_text_mask
+from preprocess_masks import generate_text_mask
 from torchvision.transforms import ToTensor
 
 class DummyArgs:
@@ -68,7 +67,7 @@ def test_single_image(img_path, weights_path):
 if __name__ == "__main__":
     # Prueba con una imagen del dataset
     img_path = r"C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\data\imagenes_cancer\Polipos\imagenes con polipos destacados\original\set3_0051.jpg"
-    weights = r"C:\Users\alber\AOT-GAN-for-Inpainting\experiments\G0000000.pt"
+    weights = r"C:\Users\alber\Desktop\Predictor_cancer_rectal\Predictor_models\artifacts\models\G0100000.pt"
     
     if Path(img_path).exists():
         test_single_image(img_path, weights)

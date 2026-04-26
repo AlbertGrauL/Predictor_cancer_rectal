@@ -1,67 +1,79 @@
-# 📁 Estructura del Dataset de Imágenes Endoscópicas
+# Estructura del Dataset de Imágenes y Datos Clínicos
 
-Este documento detalla la organización de las imágenes para el entrenamiento de los modelos de clasificación (**v1**) y el sistema de inpainting (**AOT-GAN**).
+Este documento es la referencia definitiva sobre la organización de los datos en el proyecto. Detalla la jerarquía para el entrenamiento de los modelos de clasificación (v1/v2), el sistema de inpainting (AOT-GAN) y el análisis tabular.
 
 > [!IMPORTANT]
-> La carpeta `imagenes_cancer/` está excluida de Git. Asegúrate de colocar los datos siguiendo estrictamente esta estructura para que los scripts de entrenamiento funcionen sin errores de ruta.
+> La carpeta Predictor_models/data/ está excluida de Git. Los datos deben seguir estrictamente esta estructura para asegurar la compatibilidad con los scripts de entrenamiento y validación.
 
 ---
 
-## 🏗️ Jerarquía del Proyecto de Datos
+## Jerarquía Global del Dataset
 
-El dataset se divide en tres bloques funcionales: **Diagnóstico (Clasificados)**, **Banco Crudo (Sin Clasificar)** y **Artefactos de Limpieza**.
+El dataset se organiza en bloques funcionales que separan el contenido clínico, el banco de imágenes crudas y los datos tabulares.
 
 ```text
 Predictor_models/data/
-├── imagenes_cancer/                     # Dataset Principal
-│   ├── Casos_negativos/                 # → 1,500 imgs (Ciego, Píloro, Resección)
-│   ├── Polipos/                         # → Dataset segmentado y consolidado
-│   │   └── output/
-│   │       ├── original/                # 1,798 imgs (set1, set2, set3)
-│   │       └── masks/                   # Máscaras de segmentación sincronizadas
-│   ├── Sangre_Paredes/                  # → Sangrado e inflamación leve
-│   └── imagenes sin clasificar/         # → 61,957 imgs (Banco para AOT-GAN)
+├── tabulares/                           # -> Datos Clínicos Estructurados
+│   └── cancer_final.csv                 # Base de datos de pacientes (anonymized)
 │
-├── text_masks/                          # [Generado] Máscaras de texto detectado
-└── aotgan_train/                        # [Generado] Dataset para fine-tuning de AOT-GAN
-    ├── images/                          # Recortes de mucosa limpia
-    └── masks/                           # Máscaras sintéticas (random strokes)
+├── imagenes_cancer/                     # -> Dataset de Imágenes Médicas
+│   ├── Casos_negativos/                 # -> Control (Sano)
+│   │   ├── normal-cecum/                # Mucosa del ciego
+│   │   ├── normal-pylorus/              # Mucosa del píloro
+│   │   └── dyed-resection-margins/      # Márgenes con tinte (post-resección)
+│   │
+│   ├── Polipos/                         # -> Neoplasias y Lesiones
+│   │   ├── imagenes con polipos destacados/
+│   │   │   ├── original/                # Imágenes seleccionadas (set1, set2, set3)
+│   │   │   └── masks/                   # Máscaras de segmentación sincronizadas
+│   │   └── polyps/                      # Dataset extra (ingesta v1)
+│   │
+│   ├── Sangre_Paredes/                  # -> Otras Patologías
+│   │   ├── sangre_activa/               # Hemorragia luminal
+│   │   └── inflamacion_leve/            # Eritema y friabilidad mucosa
+│   │
+│   └── imagenes sin clasificar/         # -> Banco Crudo (Big Data)
+│       └── images/                      # >60,000 imágenes para entrenamiento AOT-GAN
+│
+└── [Generado]/                          # -> Carpetas de Proceso (No manuales)
+    ├── text_masks/                      # Máscaras de texto técnico detectado
+    └── aotgan_train/                    # Dataset de fine-tuning para reconstrucción
 ```
 
 ---
 
-## 📊 Resumen por Categoría Clínica
+## Resumen Estadístico y Clínico
 
-| Categoría Clinica | Caracterización de Visualización | Cantidad | Estado |
-| :--- | :--- | :---: | :--- |
-| **Negativos (Control)** | Mucosa colónica normal, patrones de Pit de Kudo Grado I/II. | ~1,500 | ✅ Listo |
-| **Neoplasias (Pólipos)** | Lesiones planas (IIa), elevadas (Is) y pedunculadas (Ip). Clasificación de París. | 1,798 | ✅ Listo |
-| **Hemorragia (Sangre)** | Sangrado luminal activo o coágulos adherentes; riesgo de lesión T1/T2. | - | ⏳ Captura |
-| **Actividad Inflamatoria** | Eritema, pérdida de vasos y friabilidad mucosa (Puntaje Mayo 1-3). | - | ⏳ Captura |
-| **Corpus AOT-GAN** | Dataset masivo para fine-tuning de reconstrucción de texturas biológicas. | 61,957 | ✅ Listo |
+| Categoría Clínica | Caracterización Visual | Subcarpetas Clave | Estado |
+| :--- | :--- | :--- | :---: |
+| Negativos (Control) | Mucosa sana, patrones de Kudo I/II. | normal-cecum, normal-pylorus | Finalizado |
+| Pólipos (Neoplasias) | Lesiones elevadas y planas (París Is/IIa). | original, masks, polyps | Finalizado |
+| Sangre e Inflamación | Sangrado activo, colitis, eritema leve. | sangre_activa, inflamacion_leve | Expansión |
+| Banco AOT-GAN | Texturas biológicas masivas. | imagenes sin clasificar/images | Finalizado |
+| Datos Tabulares | Variables clínicas de pacientes. | tabulares/cancer_final.csv | Finalizado |
 
 ---
 
-## 🛠️ Procesamiento y Consolidación
+## Especificaciones de Integración Técnica
 
-### 1. Consolidación de Pólipos
-Las imágenes de pólipos provienen de diversas fuentes con distintos formatos. Se unifican mediante el script de organización:
-- **Script**: `Predictor_models/organizar_imagenes.py`
-- **Prefijos**: `set1_` (png), `set2_` (png), `set3_` (jpg).
+### 1. Sincronización Imagen-Máscara
+En la carpeta Polipos/imagenes con polipos destacados/, la relación entre imagen y máscara es 1:1 mediante el nombre del archivo.
+- Ejemplo: original/set1_0001.png <-> masks/set1_0001.png
+- El script organizar_imagenes.py garantiza que no existan "huérfanos" (imágenes sin máscara o viceversa).
 
 ### 2. Flujo de Limpieza (Inpainting)
 Para evitar el sesgo por texto en pantalla, el sistema genera versiones "limpias" de las imágenes:
-- **`text_masks/`**: Contiene máscaras binarias donde el blanco representa texto clínico.
-- **`*_cleaned/`**: Carpetas generadas (ej. `Polipos_cleaned`) tras pasar por el modelo AOT-GAN, donde el texto ha sido sustituido por textura de mucosa sintética.
+1. Detección: Se generan máscaras en text_masks/.
+2. Reconstrucción: El modelo AOT-GAN sustituye el texto por textura mucosa sintética, guardando el resultado en carpetas con el sufijo _cleaned.
+
+### 3. Datos Tabulares
+El archivo cancer_final.csv contiene la información clínica que alimenta los modelos de predicción basados en variables (no imágenes). Está diseñado para ser procesado por el pipeline de Predictor_models/pipeline/tabular_expert/.
 
 ---
 
-## 📝 Especificaciones de Integración Técnica
-
-- **Coherencia Geométrica**: En la carpeta `Polipos/output`, cada frame y su correspondiente máscara binaria comparten una clave primaria (nombre de archivo). Esto permite cargar lotes de entrenamiento sin desajustes espaciales.
-- **Filtrado de Huérfanos**: El proceso de consolidación detecta y segrega automáticamente registros incompletos, garantizando la integridad referencial del dataset.
-- **Consolidación del Baseline**: Los prefijos `set1_`, `set2_` y `set3_` permiten la trazabilidad del origen del dato (datasets públicos vs capturas institucionales), facilitando estudios de generalización de dominio.
-- **Mantenimiento**: Para regenerar la estructura consolidada en una nueva máquina:
-  ```bash
-  python Predictor_models/organizar_imagenes.py
-  ```
+## Mantenimiento del Dataset
+Para regenerar o sincronizar la estructura tras añadir nuevos datos de pólipos, ejecuta:
+```powershell
+python Predictor_models/organizar_imagenes.py
+```
+(Este script procesa las fuentes crudas y las unifica bajo la carpeta Polipos/imagenes con polipos destacados/).

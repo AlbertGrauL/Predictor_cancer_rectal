@@ -1,27 +1,37 @@
-# PredictorFront
+# Predictor Clínico Front-End (Angular)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Este directorio contiene la interfaz de usuario web del **Predictor de Cáncer Colorrectal**, diseñada específicamente para uso clínico por endoscopistas y personal médico.
 
-## Development server
+## 🛠 Arquitectura Tecnológica
+- **Framework:** Angular 17+ (Aplicación SPA)
+- **Estilos:** Tailwind CSS (con soporte para tipografía y queries de contenedor)
+- **Comunicación:** Servicios HTTP asíncronos enlazados a la API de FastAPI.
+- **Gestión de Estado:** RxJS y Signals (Angular 17+).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+##  Puesta en Marcha (Desarrollo)
 
-## Code scaffolding
+Para iniciar la aplicación en tu entorno local:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. **Instalar Dependencias:** (Solo la primera vez)
+   ```bash
+   npm install
+   ```
+2. **Arrancar el Servidor:**
+   ```bash
+   npm start
+   ```
+   La aplicación se abrirá en `http://localhost:4200/`.
 
-## Build
+##  Integración con la API (IA)
+El frontend no ejecuta redes neuronales directamente. Actúa como un cliente ligero que se comunica con el servidor de IA.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. **Flujo de Usuario:**
+   - El médico rellena el formulario de triaje clínico (edad, antecedentes, síntomas).
+   - El médico sube una imagen endoscópica capturada.
+   - El front-end empaqueta estos datos como `multipart/form-data` y los envía a la ruta `POST /predict` de la API (puerto 8000).
 
-## Running unit tests
+2. **Recepción de Resultados:**
+   - El backend devuelve un JSON con el diagnóstico de los 4 modelos (Pólipos, Sangre, Inflamación, Negativos) y el puntaje clínico.
+   - El frontend renderiza visualmente estos porcentajes mediante barras de progreso y alertas de color (verde/rojo) para facilitar la toma de decisiones rápidas.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+*(Nota: La limpieza de la imagen mediante inpainting ocurre en el backend antes de la clasificación, de forma transparente para el frontend).*

@@ -6,15 +6,22 @@ Este repositorio contiene un sistema modular basado en PyTorch para el entrenami
 
 ### 1. Requisitos e Instalación
 
-Se recomienda usar un entorno de **Conda** para gestionar las dependencias y el soporte de GPU (NVIDIA).
+El proyecto utiliza **uv** para una gestión de dependencias ultra-rápida y reproducible. Se recomienda mantener el soporte de GPU (NVIDIA) activo.
 
 ```bash
-# Activa tu entorno de conda (ej: inpainting)
-conda activate inpainting
-
-# Instala las dependencias necesarias
-pip install torch torchvision torchaudio mlflow scikit-learn tqdm opencv-python pillow
+# Sincroniza e instala todas las dependencias (PyTorch, FastAPI, etc.) automáticamente
+uv sync
 ```
+*(Esto leerá el archivo `pyproject.toml` y preparará un entorno virtual aislado con las versiones exactas).*
+
+### 2. Descarga de Artefactos (Modelos y Datos)
+
+Para que la aplicación funcione y tenga datos con los que operar, es **estrictamente necesario** descargar los pesos de los modelos entrenados y los datasets.
+
+1. Accede al siguiente [enlace de SharePoint (OneDrive)](https://grupstucom-my.sharepoint.com/:f:/g/personal/pl2025135_365_stucom_com/IgC_LpcPD4trSpXrnEHbPPzrAfjs_gWls4wGjHWBc2w4R98?e=ZhsxZf).
+2. Descarga los archivos **`modelos.rar`** y **`datos.rar`**.
+3. Extrae el contenido de `modelos.rar` dentro de la carpeta `Predictor_models/artifacts/models/`.
+4. Extrae el contenido de `datos.rar` dentro de la carpeta `Predictor_models/data/`.
 
 ---
 

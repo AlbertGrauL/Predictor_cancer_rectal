@@ -34,6 +34,7 @@ LOGS_DIR = BASE_DIR / "Predictor_models" / "logs"
 MODELS_DIR = BASE_DIR / "Predictor_models" / "artifacts" / "models"
 FIGURES_DIR = BASE_DIR / "Predictor_models" / "artifacts" / "figures"
 EXPERIMENTS_DIR = BASE_DIR / "Predictor_models" / "experiments"
+INPAINT_WEIGHTS = MODELS_DIR / "G0100000.pt"
 
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(MODELS_DIR, exist_ok=True)
