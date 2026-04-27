@@ -1,7 +1,7 @@
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import recall_score, precision_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import recall_score, precision_score, roc_auc_score, confusion_matrix, f1_score, accuracy_score, average_precision_score
 
 def calculate_metrics(y_true, y_probs, threshold=0.5):
     """
@@ -24,11 +24,20 @@ def calculate_metrics(y_true, y_probs, threshold=0.5):
     except ValueError:
         auc = 0.5 # Caso donde solo hay una clase en el batch
         
+    # PR-AUC
+    try:
+        pr_auc = average_precision_score(y_true, y_probs)
+    except ValueError:
+        pr_auc = 0.0
+
     return {
         "sensitivity": sensitivity,
         "specificity": specificity,
         "auc": auc,
+        "pr_auc": pr_auc,
         "precision": precision_score(y_true, y_pred, zero_division=0),
+        "f1_score": f1_score(y_true, y_pred, zero_division=0),
+        "accuracy": accuracy_score(y_true, y_pred),
         "confusion_matrix": (tn, fp, fn, tp)
     }
 

@@ -6,6 +6,8 @@ import random
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+import logging
+import torch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -92,7 +94,7 @@ def dependency_guard(modules: dict[str, str]) -> None:
         )
 
 
-@dataclass(slots=True)
+@dataclass
 class PathsConfig:
     dataset_root: Path
     artifacts_root: Path
@@ -114,3 +116,31 @@ def load_paths(config: dict[str, Any]) -> PathsConfig:
         checkpoints_dir=ensure_dir(paths["checkpoints_dir"]),
         metrics_dir=ensure_dir(paths["metrics_dir"]),
     )
+
+def get_logger(name: str) -> logging.Logger:
+    logger = logging.getLogger(name)
+    if not logger.handlers:
+        logger.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        
+        # Console handler
+        ch = logging.StreamHandler()
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+    return logger
+
+def save_checkpoint(model, optimizer, epoch, save_path):
+    torch.save({
+        'epoch': epoch,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict()
+    }, save_path)
+
+def load_checkpoint(model, optimizer, load_path, device="cpu"):
+    checkpoint = torch.load(load_path, map_location=device)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    if optimizer is not None and 'optimizer_state_dict' in checkpoint:
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    return model, optimizer, checkpoint.get('epoch', 0)
+
+

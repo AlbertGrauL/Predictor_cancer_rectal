@@ -72,10 +72,18 @@ def train_model(model, train_loader, val_loader, optimizer, criterion, epochs, p
             mlflow.log_metrics({
                 "train_loss": train_loss,
                 "train_auc": train_metrics['auc'],
+                "train_pr_auc": train_metrics['pr_auc'],
+                "train_accuracy": train_metrics['accuracy'],
+                "train_f1_score": train_metrics['f1_score'],
+                "train_precision": train_metrics['precision'],
                 "train_sensitivity": train_metrics['sensitivity'],
                 "train_specificity": train_metrics['specificity'],
                 "val_loss": val_loss,
                 "val_auc": val_metrics['auc'],
+                "val_pr_auc": val_metrics['pr_auc'],
+                "val_accuracy": val_metrics['accuracy'],
+                "val_f1_score": val_metrics['f1_score'],
+                "val_precision": val_metrics['precision'],
                 "val_sensitivity": val_metrics['sensitivity'],
                 "val_specificity": val_metrics['specificity']
             }, step=epoch)
